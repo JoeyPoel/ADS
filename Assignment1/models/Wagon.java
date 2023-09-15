@@ -46,7 +46,6 @@ public class Wagon {
      * @return  whether this wagon has a wagon appended at the tail
      */
     public boolean hasNextWagon() {
-        // TODO
         if(this.nextWagon != null){ // If there is a next wagon
             return true;
         } else{
@@ -58,7 +57,6 @@ public class Wagon {
      * @return  whether this wagon has a wagon prepended at the front
      */
     public boolean hasPreviousWagon() {
-        // TODO
         if(this.previousWagon != null){ // If there is a predecessor
             return true;
         } else{
@@ -72,11 +70,10 @@ public class Wagon {
      * @return  the last wagon
      */
     public Wagon getLastWagonAttached() {
-        // TODO find the last wagon in the sequence
         Wagon currentWagon = this;
-        do{
-            currentWagon = currentWagon.nextWagon; // Sets current wagon as its followup
-        }while(currentWagon.hasNextWagon()); // Loop until there is no follow up
+        while(currentWagon.hasNextWagon()){ // Loop until there is no follow up
+            currentWagon = currentWagon.getNextWagon(); // Sets current wagon as its followup
+        }
 
         return currentWagon;
     }
@@ -86,13 +83,12 @@ public class Wagon {
      * including this wagon itself.
      */
     public int getSequenceLength() {
-        // TODO traverse the sequence and find its length
         Wagon currentWagon = this.getLastWagonAttached(); // Initializes a variable as last wagon
         int counter = 0;
-        do{
-            currentWagon = currentWagon.nextWagon; // Sets current wagon as its predecessor
+        while(currentWagon.hasPreviousWagon()){ // Loops till current wagon has no previous wagon (so till it reaches head wagon)
+            currentWagon = currentWagon.getPreviousWagon(); // Sets current wagon as its predecessor
             counter++; // Adds 1 to the counter
-        }while(currentWagon.hasNextWagon()); // Loops till current wagon has no next wagon (so till it reaches head wagon)
+        }
         return counter; // Returns integer of how many wagons there are.
     }
 
@@ -113,8 +109,6 @@ public class Wagon {
         } else{
             System.out.println(id + " has already been attached to " + tail.getId());
         }
-
-        // TODO attach the tail wagon to this wagon (sustaining the invariant propositions).
     }
 
     /**
@@ -131,9 +125,6 @@ public class Wagon {
         } else{
             return null;
         }
-
-        // TODO detach the tail from this wagon (sustaining the invariant propositions).
-        //  and return the head wagon of that tail
     }
 
     /**
@@ -143,8 +134,6 @@ public class Wagon {
      *          or <code>null</code> if it had no previousWagon.
      */
     public Wagon detachFront() {
-        // TODO detach this wagon from its predecessor (sustaining the invariant propositions).
-        //   and return that predecessor
         if(this.hasPreviousWagon()){
             Wagon predecessor = getPreviousWagon(); // Saves predecessor in a variable
             this.setPreviousWagon(null); // Removes predecessor
@@ -183,7 +172,6 @@ public class Wagon {
         }
 
         previousWagon.nextWagon = this.nextWagon; // Sets predecessors tail as tail of this wagon
-        // TODO
     }
 
 

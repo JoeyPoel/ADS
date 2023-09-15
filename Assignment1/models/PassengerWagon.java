@@ -15,8 +15,7 @@ public class PassengerWagon extends Wagon{
     }
 
     public int getNumberOfSeats() {
-        // TODO
 
-        return 0;
+        return numberOfSeats;
     }
 }

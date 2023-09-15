@@ -30,9 +30,7 @@ public class Train {
      * @return
      */
     public boolean hasWagons() {
-        // TODO
-
-        return false;   // replace by proper outcome
+        return this.getFirstWagon() != null; // If it has a first wagon so if not null it will return true, else it will return false.
     }
 
     /**
@@ -41,9 +39,7 @@ public class Train {
      * @return
      */
     public boolean isPassengerTrain() {
-        // TODO
-
-        return false;   // replace by proper outcome
+        return firstWagon instanceof PassengerWagon; // If first wagon is an instance of a passenger wagon it will return true, else it will return false.
     }
 
     /**
@@ -52,9 +48,7 @@ public class Train {
      * @return
      */
     public boolean isFreightTrain() {
-        // TODO
-
-        return false;   // replace by proper outcome
+        return firstWagon instanceof FreightWagon; // If first wagon is an instance of a freight wagon it will return true, else it will return false.
     }
 
     public Locomotive getEngine() {
@@ -71,25 +65,31 @@ public class Train {
      * @param wagon the first wagon of a sequence of wagons to be attached (can be null)
      */
     public void setFirstWagon(Wagon wagon) {
-        // TODO
+        this.firstWagon = wagon; // First wagon will be set to given wagon
     }
 
     /**
      * @return  the number of Wagons connected to the train
      */
     public int getNumberOfWagons() {
-        // TODO
-
-        return 0;   // replace by proper outcome
+        Wagon currentWagon = firstWagon; // Initializes a variable as first wagon
+        int counter = 0;
+        while(currentWagon.hasNextWagon()){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
+            currentWagon = currentWagon.getNextWagon(); // Sets current wagon as its follow up
+            counter++; // Adds 1 to the counter
+        }
+        return counter; // Returns integer of how many wagons there are.
     }
 
     /**
      * @return  the last wagon attached to the train
      */
     public Wagon getLastWagonAttached() {
-        // TODO
-
-        return null;    // replace by proper outcome
+        Wagon currentWagon = firstWagon; // Initializes a variable as first wagon
+        while(currentWagon.hasNextWagon()){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
+            currentWagon = currentWagon.getNextWagon(); // Sets current wagon as its follow up
+        }
+        return currentWagon; // Returns the wagon where the loop breaks
     }
 
     /**
@@ -97,9 +97,16 @@ public class Train {
      *          (return 0 for a freight train)
      */
     public int getTotalNumberOfSeats() {
-        // TODO
-
-        return 0;   // replace by proper outcome
+        int numberOfSeats = 0;
+        if(isPassengerTrain()){
+            PassengerWagon currentWagon = (PassengerWagon) firstWagon; // Initializes a variable as first wagon
+            while(currentWagon.hasNextWagon()){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
+                numberOfSeats = numberOfSeats + currentWagon.getNumberOfSeats(); // Adds the number of seats of the current wagon to the total
+                currentWagon = (PassengerWagon) currentWagon.getNextWagon(); // Sets current wagon as its follow up
+            }
+            return numberOfSeats;
+        }
+        return 0;   // returns 0 if train is a freight wagon
     }
 
     /**
@@ -109,9 +116,16 @@ public class Train {
      *
      */
     public int getTotalMaxWeight() {
-        // TODO
-
-        return 0;   // replace by proper outcome
+        int weight = 0;
+        if(isFreightTrain()){
+            FreightWagon currentWagon = (FreightWagon) firstWagon; // Initializes a variable as first wagon
+            while(currentWagon.hasNextWagon()){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
+                weight = weight + currentWagon.getMaxWeight(); // Adds the max weight of the current wagon to the total
+                currentWagon = (FreightWagon) currentWagon.getNextWagon(); // Sets current wagon as its follow up
+            }
+            return weight;
+        }
+        return 0;   // returns 0 if train is a passenger wagon
     }
 
      /**
