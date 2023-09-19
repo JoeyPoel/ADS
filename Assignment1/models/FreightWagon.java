@@ -1,5 +1,5 @@
 package models;
-// TODO
+
 public class FreightWagon extends Wagon {
 
     public int maxWeight;
@@ -9,13 +9,11 @@ public class FreightWagon extends Wagon {
     }
 
     public FreightWagon(int wagonId, int maxWeight) {
-        // TODO
         super(wagonId);
         this.maxWeight = maxWeight;
     }
 
     public int getMaxWeight() {
-        // TODO
-        return 0;
+        return maxWeight;
     }
 }

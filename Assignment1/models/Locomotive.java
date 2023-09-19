@@ -24,6 +24,4 @@ public class Locomotive {
     public int getMaxWagons() {
         return maxWagons;
     }
-
-    // TODO
 }
