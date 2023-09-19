@@ -74,19 +74,20 @@ public class Train {
     public int getNumberOfWagons() {
         Wagon currentWagon = firstWagon; // Initializes a variable as first wagon
         int counter = 0;
-        while(currentWagon.hasNextWagon()){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
-            currentWagon = currentWagon.getNextWagon(); // Sets current wagon as its follow up
+        while (currentWagon != null) { // Loop until there are no more wagons
+            currentWagon = currentWagon.getNextWagon(); // Sets current wagon as its follow-up
             counter++; // Adds 1 to the counter
         }
-        return counter; // Returns integer of how many wagons there are.
+        return counter; // Returns the number of wagons
     }
+
 
     /**
      * @return  the last wagon attached to the train
      */
     public Wagon getLastWagonAttached() {
         Wagon currentWagon = firstWagon; // Initializes a variable as first wagon
-        while(currentWagon.hasNextWagon()){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
+        while (currentWagon != null && currentWagon.hasNextWagon()) { // Loops till current wagon has no next wagon (so till it reaches last wagon)
             currentWagon = currentWagon.getNextWagon(); // Sets current wagon as its follow up
         }
         return currentWagon; // Returns the wagon where the loop breaks
@@ -134,11 +135,20 @@ public class Train {
      * @return  the wagon found at the given position
      *          (return null if the position is not valid for this train)
      */
-    public Wagon findWagonAtPosition(int position) {
-        // TODO
+     public Wagon findWagonAtPosition(int position) {
+         Wagon currentWagon = firstWagon;
+         int currentPosition = 0;
 
-        return null;    // replace by proper outcome
-    }
+         if(position <= this.getNumberOfWagons()){
+             while (currentWagon != null && currentPosition < position) {
+                 currentWagon = currentWagon.getNextWagon();
+                 currentPosition++;
+             }
+             return currentWagon;
+         } else{
+             return null;
+         }
+     }
 
     /**
      * Finds the wagon with a given wagonId
@@ -147,10 +157,19 @@ public class Train {
      *          (return null if no wagon was found with the given wagonId)
      */
     public Wagon findWagonById(int wagonId) {
-        // TODO
+        Wagon currentWagon = firstWagon;
+        int currentPosition = 0;
 
-        return null;    // replace by proper outcome
+        while (currentWagon != null && currentPosition < this.getNumberOfWagons()) {
+            if(currentWagon.id == wagonId){
+                return currentWagon;
+            }
+            currentWagon = currentWagon.getNextWagon();
+            currentPosition++;
+        }
+        return null;
     }
+
 
     /**
      * Determines if the given sequence of wagons can be attached to this train
