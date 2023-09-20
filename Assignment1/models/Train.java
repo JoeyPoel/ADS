@@ -101,7 +101,7 @@ public class Train {
         int numberOfSeats = 0;
         if(isPassengerTrain()){
             PassengerWagon currentWagon = (PassengerWagon) firstWagon; // Initializes a variable as first wagon
-            while(currentWagon.hasNextWagon()){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
+            while(currentWagon != null){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
                 numberOfSeats = numberOfSeats + currentWagon.getNumberOfSeats(); // Adds the number of seats of the current wagon to the total
                 currentWagon = (PassengerWagon) currentWagon.getNextWagon(); // Sets current wagon as its follow up
             }
@@ -120,7 +120,7 @@ public class Train {
         int weight = 0;
         if(isFreightTrain()){
             FreightWagon currentWagon = (FreightWagon) firstWagon; // Initializes a variable as first wagon
-            while(currentWagon.hasNextWagon()){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
+            while(currentWagon != null){ // Loops till current wagon has no next wagon (so till it reaches last wagon)
                 weight = weight + currentWagon.getMaxWeight(); // Adds the max weight of the current wagon to the total
                 currentWagon = (FreightWagon) currentWagon.getNextWagon(); // Sets current wagon as its follow up
             }
@@ -129,26 +129,26 @@ public class Train {
         return 0;   // returns 0 if train is a passenger wagon
     }
 
-     /**
+    /**
      * Finds the wagon at the given position (starting at 0 for the first wagon of the train)
      * @param position
      * @return  the wagon found at the given position
      *          (return null if the position is not valid for this train)
      */
-     public Wagon findWagonAtPosition(int position) {
-         Wagon currentWagon = firstWagon;
-         int currentPosition = 0;
+    public Wagon findWagonAtPosition(int position) {
+        Wagon currentWagon = firstWagon;
+        int currentPosition = 0;
 
-         if(position <= this.getNumberOfWagons()){
-             while (currentWagon != null && currentPosition < position) {
-                 currentWagon = currentWagon.getNextWagon();
-                 currentPosition++;
-             }
-             return currentWagon;
-         } else{
-             return null;
-         }
-     }
+        if(position >= 0 && position <= this.getNumberOfWagons()){
+            while (currentWagon != null && currentPosition < position) {
+                currentWagon = currentWagon.getNextWagon();
+                currentPosition++;
+            }
+            return currentWagon;
+        } else{
+            return null;
+        }
+    }
 
     /**
      * Finds the wagon with a given wagonId
@@ -250,7 +250,7 @@ public class Train {
         // TODO
 
         return false;   // replace by proper outcome
-     }
+    }
 
     /**
      * Tries to split this train before the wagon at given position and move the complete sequence
