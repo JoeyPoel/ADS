@@ -198,37 +198,22 @@ public class Wagon {
      */
     public Wagon reverseSequence() {
         // Check if there is a succeeding next wagon attached
-        if (nextWagon == null) {
-            return this; // No action needed if there's no succeeding wagon
-        }
-
-        // Initialize variables to keep track of the current wagon
         Wagon currentWagon = this;
-        Wagon newFirstWagon = null;
+        Wagon front = this.previousWagon;
+        Wagon newFirstWagon = getLastWagonAttached();
 
-        // Reverse the sequence of wagons
-        while (currentWagon != null) {
-            Wagon next = currentWagon.nextWagon;
-            currentWagon.nextWagon = newFirstWagon;
-            newFirstWagon = currentWagon;
-            currentWagon = next;
+        getLastWagonAttached().detachFront();
+
+        for (int i = 0; i < getSequenceLength(); i++) {
+            Wagon reversing = getLastWagonAttached();
+            getLastWagonAttached().detachFront();
+            newFirstWagon.getLastWagonAttached().attachTail(reversing);
         }
-
-        // Update the previous wagon, if it exists
-        if (previousWagon != null) {
-            previousWagon.nextWagon = newFirstWagon;
+        currentWagon.detachFront();
+        newFirstWagon.getLastWagonAttached().attachTail(this);
+        if (front != null) {
+            front.attachTail(newFirstWagon);
         }
-
-        // Update the next wagon of the new last wagon
-        if (newFirstWagon != null) {
-            newFirstWagon.previousWagon = previousWagon;
-        }
-
-        // Update this wagon's next and previous references
-        this.nextWagon = null;
-        this.previousWagon = null;
-
-        // Return the new start wagon of the reversed sequence (former last wagon)
         return newFirstWagon;
     }
 
