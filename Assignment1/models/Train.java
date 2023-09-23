@@ -237,8 +237,8 @@ public class Train {
         }
 
         // If there are existing wagons in the train:
-        // - Find the last wagon in the current sequence.
-        // - Connect the new wagon to the last wagon.
+        // Find the last wagon in the current sequence.
+        // Connect the new wagon to the last wagon.
         // If there are no existing wagons, set the new wagon as the first wagon.
         if (lastWagon != null) {
             while (lastWagon.hasNextWagon()) {
@@ -266,9 +266,38 @@ public class Train {
      * @return  whether the insertion could be completed successfully
      */
     public boolean insertAtFront(Wagon wagon) {
-        // TODO
 
-        return false;   // replace by proper outcome
+
+        int totalWagons = getNumberOfWagons() + wagon.getSequenceLength();
+        int maxAllowedWagons = engine.getMaxWagons();
+
+        //
+        if (totalWagons > maxAllowedWagons) {
+            return false;
+        }
+
+        wagon.detachFront();
+
+        if (firstWagon != null) {
+            if (firstWagon.equals(wagon)) {
+                return false;
+            }
+            firstWagon.setPreviousWagon(wagon.getLastWagonAttached());
+        }
+
+
+
+        wagon.getLastWagonAttached().setNextWagon(firstWagon);
+
+        firstWagon = wagon;
+
+
+
+
+
+
+        return true;
+
     }
 
     /**
