@@ -203,7 +203,6 @@ public class Train {
         }
 
         int totalWagons = getNumberOfWagons() + wagon.getSequenceLength();
-
         int maxAllowedWagons = engine.getMaxWagons();
 
         if (totalWagons > maxAllowedWagons) {
@@ -222,9 +221,39 @@ public class Train {
      * @return  whether the attachment could be completed successfully
      */
     public boolean attachToRear(Wagon wagon) {
-        // TODO
 
-        return false;   // replace by proper outcome
+        Wagon lastWagon = getLastWagonAttached();
+
+        int totalWagons = getNumberOfWagons() + wagon.getSequenceLength();
+        int maxAllowedWagons = engine.getMaxWagons();
+
+        //
+        if (totalWagons > maxAllowedWagons) {
+            return false;
+        }
+
+        if (wagon.hasPreviousWagon()) {
+            wagon.detachFront();
+        }
+
+        // If there are existing wagons in the train:
+        // - Find the last wagon in the current sequence.
+        // - Connect the new wagon to the last wagon.
+        // If there are no existing wagons, set the new wagon as the first wagon.
+        if (lastWagon != null) {
+            while (lastWagon.hasNextWagon()) {
+                lastWagon = lastWagon.getNextWagon();
+            }
+            lastWagon.setNextWagon(wagon);
+            wagon.setPreviousWagon(lastWagon);
+        } else {
+            firstWagon = wagon;
+        }
+
+
+
+        return true;
+
     }
 
     /**
