@@ -139,6 +139,9 @@ public class Train {
         Wagon currentWagon = firstWagon;
         int currentPosition = 0;
 
+        // checks if the given position is within the valid range,
+        // meaning it's non-negative and less than or equal to the total number of wagons.
+        // If the position is valid, it proceeds to find the wagon.
         if(position >= 0 && position <= this.getNumberOfWagons()){
             while (currentWagon != null && currentPosition < position) {
                 currentWagon = currentWagon.getNextWagon();
@@ -181,9 +184,33 @@ public class Train {
      * @return whether type and capacity of this train can accommodate attachment of the sequence
      */
     public boolean canAttach(Wagon wagon) {
-        // TODO
 
-        return false;   // replace by proper outcome
+        Wagon currentWagon = firstWagon;
+
+        while (currentWagon != null) {
+            if (currentWagon.equals(wagon)) {
+                return false;
+            }
+            currentWagon = currentWagon.getNextWagon();
+        }
+
+        if (isFreightTrain() && !(wagon instanceof FreightWagon)){
+
+            return false;
+        } else if (isPassengerTrain() && !(wagon instanceof PassengerWagon)){
+
+            return false;
+        }
+
+        int totalWagons = getNumberOfWagons() + wagon.getSequenceLength();
+
+        int maxAllowedWagons = engine.getMaxWagons();
+
+        if (totalWagons > maxAllowedWagons) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
