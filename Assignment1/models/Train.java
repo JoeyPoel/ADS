@@ -421,9 +421,54 @@ public class Train {
      * @return whether the move could be completed successfully
      */
     public boolean splitAtPosition(int position, Train toTrain) {
-        // TODO
 
-        return false;   // replace by proper outcome
+        Wagon wagonAtPosition = findWagonAtPosition(position);
+
+
+        if (firstWagon == null) {
+            return false;
+        }
+
+        int totalWagons =  firstWagon.getSequenceLength();
+        int toTrainWagons = wagonAtPosition.getSequenceLength() + toTrain.getNumberOfWagons();
+        int maxTotalWagons = engine.getMaxWagons() + 1;
+
+        if (totalWagons > maxTotalWagons || position < 0 || position  >= totalWagons) {
+            return false;
+        }
+
+        if (toTrainWagons > maxTotalWagons) {
+            return false;
+        }
+
+
+
+        if (toTrain.isPassengerTrain() && (wagonAtPosition instanceof FreightWagon)) {
+            return false;
+        } else if (toTrain.isFreightTrain() && (wagonAtPosition instanceof PassengerWagon)) {
+            return false;
+        }
+
+        if (wagonAtPosition.getPreviousWagon() == null) {
+            firstWagon = null;
+        }
+        wagonAtPosition.detachFront();
+
+
+
+        if (toTrain.firstWagon == null) {
+            toTrain.firstWagon = wagonAtPosition;
+        } else {
+            Wagon currentWagon = toTrain.getLastWagonAttached();
+            currentWagon.attachTail(wagonAtPosition);
+
+
+        }
+
+
+
+
+        return true;
     }
 
     /**
@@ -434,8 +479,12 @@ public class Train {
      * (No change if the train has no wagons or only one wagon)
      */
     public void reverse() {
-        // TODO
+        if (firstWagon == null || firstWagon.getNextWagon() == null) {
 
+        } else {
+            Wagon newFirstWagon = firstWagon.reverseSequence();
+            firstWagon = newFirstWagon;
+        }
     }
 
     // TODO string representation of a train
