@@ -504,5 +504,14 @@ public class Train {
         }
     }
 
-    // TODO string representation of a train
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("[" + engine + "]");
+        Wagon currentWagon = firstWagon;
+        while (currentWagon != null) {
+            result.append(" ").append(currentWagon);
+            currentWagon = currentWagon.getNextWagon();
+        }
+        return result + " with " + getNumberOfWagons() + " wagons from " + origin + " to " + destination;
+    }
 }
