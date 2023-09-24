@@ -1,6 +1,6 @@
 package models;
 
-public class Wagon {
+public abstract class Wagon {
     public void setId(int id) {
         this.id = id;
     }
