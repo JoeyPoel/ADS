@@ -448,7 +448,8 @@ public class Train {
         }
 
         int totalWagons =  firstWagon.getSequenceLength();
-        int maxTotalWagons = engine.getMaxWagons() + 1;
+        int maxTotalWagons = toTrain.engine.getMaxWagons();
+
 
         if (totalWagons > maxTotalWagons || position < 0 || position  >= totalWagons) {
             return false;
