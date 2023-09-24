@@ -149,7 +149,8 @@ public class Train {
         // If the position is valid, it proceeds to find the wagon.
         if (currentWagon != null) {
             if (position >= 0 && position <= this.getNumberOfWagons()) {
-                while (currentWagon.hasNextWagon() && currentPosition < position) {
+                while (currentPosition != position) {
+
                     currentWagon = currentWagon.getNextWagon();
                     currentPosition++;
                 }
@@ -333,16 +334,33 @@ public class Train {
         Wagon currentWagon = findWagonAtPosition(position);
 
 
+
         wagon.detachFront();
 
         if (position == 0) {
-            wagon.setNextWagon(firstWagon);
+            if (firstWagon != null) {
+                currentWagon.detachFront();
+                wagon.attachTail(currentWagon);
+
+            }
+            firstWagon = wagon;
         } else {
-            firstWagon.detachTail();
-            wagon.setPreviousWagon(firstWagon);
-            wagon.setNextWagon(currentWagon);
+
+            if (currentWagon == null) {
+                currentWagon = wagon;
+                firstWagon.getLastWagonAttached().attachTail(currentWagon);
+            } else {
+                Wagon prevWagon = currentWagon.getPreviousWagon();
+
+                currentWagon.detachFront();
+                prevWagon.attachTail(wagon);
+                wagon.getLastWagonAttached().attachTail(currentWagon);
+            }
+
+
+
         }
-        firstWagon = wagon;
+
 
 
         return true;
@@ -430,14 +448,14 @@ public class Train {
         }
 
         int totalWagons =  firstWagon.getSequenceLength();
-        int toTrainWagons = wagonAtPosition.getSequenceLength() + toTrain.getNumberOfWagons();
         int maxTotalWagons = engine.getMaxWagons() + 1;
 
         if (totalWagons > maxTotalWagons || position < 0 || position  >= totalWagons) {
             return false;
         }
+        int toTrainMaxWagons = wagonAtPosition.getSequenceLength() + toTrain.getNumberOfWagons();
 
-        if (toTrainWagons > maxTotalWagons) {
+        if (toTrainMaxWagons > maxTotalWagons) {
             return false;
         }
 
@@ -482,8 +500,7 @@ public class Train {
         if (firstWagon == null || firstWagon.getNextWagon() == null) {
 
         } else {
-            Wagon newFirstWagon = firstWagon.reverseSequence();
-            firstWagon = newFirstWagon;
+            firstWagon = firstWagon.reverseSequence();
         }
     }
 

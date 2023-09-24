@@ -1,6 +1,6 @@
 package models;
 
-public abstract class Wagon {
+abstract public class Wagon {
     public void setId(int id) {
         this.id = id;
     }
@@ -197,16 +197,18 @@ public abstract class Wagon {
      * @return the new start Wagon of the reversed sequence (with is the former last Wagon of the original sequence)
      */
     public Wagon reverseSequence() {
-        // Check if there is a succeeding next wagon attached
+
         Wagon currentWagon = this;
         Wagon front = this.previousWagon;
         Wagon newFirstWagon = getLastWagonAttached();
 
         getLastWagonAttached().detachFront();
 
-        for (int i = 0; i < getSequenceLength(); i++) {
-            Wagon reversing = getLastWagonAttached();
-            getLastWagonAttached().detachFront();
+        int sequence = this.getSequenceLength();
+
+        for (int i = 0; i < sequence; i++) {
+            Wagon reversing = this.getLastWagonAttached();
+            reversing.detachFront();
             newFirstWagon.getLastWagonAttached().attachTail(reversing);
         }
         currentWagon.detachFront();
@@ -222,6 +224,6 @@ public abstract class Wagon {
 
     @Override
     public String toString() {
-        return "[Wagon-" + id + "]";
+        return "[Wagon-" + id +"]";
     }
 }
