@@ -334,7 +334,6 @@ public class Train {
         Wagon currentWagon = findWagonAtPosition(position);
 
 
-
         wagon.detachFront();
 
         if (position == 0) {
@@ -358,10 +357,7 @@ public class Train {
             }
 
 
-
         }
-
-
 
         return true;
     }
@@ -447,11 +443,11 @@ public class Train {
             return false;
         }
 
-        int totalWagons =  firstWagon.getSequenceLength();
+        int totalWagons = firstWagon.getSequenceLength();
         int maxTotalWagons = toTrain.engine.getMaxWagons();
 
 
-        if (totalWagons > maxTotalWagons || position < 0 || position  >= totalWagons) {
+        if (totalWagons > maxTotalWagons || position < 0 || position >= totalWagons) {
             return false;
         }
         int toTrainMaxWagons = wagonAtPosition.getSequenceLength() + toTrain.getNumberOfWagons();
@@ -459,7 +455,6 @@ public class Train {
         if (toTrainMaxWagons > maxTotalWagons) {
             return false;
         }
-
 
 
         if (toTrain.isPassengerTrain() && (wagonAtPosition instanceof FreightWagon)) {
@@ -474,7 +469,6 @@ public class Train {
         wagonAtPosition.detachFront();
 
 
-
         if (toTrain.firstWagon == null) {
             toTrain.firstWagon = wagonAtPosition;
         } else {
@@ -483,8 +477,6 @@ public class Train {
 
 
         }
-
-
 
 
         return true;
