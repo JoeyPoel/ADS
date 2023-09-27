@@ -1,3 +1,5 @@
+package A1_Trains_starter.src.test.java;
+
 import models.*;
 import org.junit.jupiter.api.*;
 

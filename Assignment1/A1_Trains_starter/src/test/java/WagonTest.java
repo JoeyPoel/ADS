@@ -1,3 +1,5 @@
+package A1_Trains_starter.src.test.java;
+
 import models.FreightWagon;
 import models.PassengerWagon;
 import models.Wagon;
