@@ -1,6 +1,8 @@
 package models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -37,11 +39,21 @@ public class Detection {
      */
     public static Detection fromLine(String textLine, List<Car> cars) {
         Detection newDetection = null;
+        // extract the comma-separated fields from the textLine
+        String[] fields = textLine.split(",");
+        try {
+            // parse the fields and instantiate a new detection
+            newDetection = new Detection(
+                    cars.get(cars.indexOf(new Car(fields[0].trim()))),
+                    fields[1].trim(),
+                    LocalDateTime.parse(fields[2].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
 
-        // TODO convert the information in the textLine into a new Detection instance
-        //  use the cars.indexOf to find the car that is associated with the licensePlate of the detection
-        //  if no car can be found a new Car shall be instantiated and added to the list and associated with the detection
-
+            );
+        } catch (Exception e) {
+            // any of the parse and valueOf methods could throw an exception on a format mismatch
+            System.out.printf("Could not parse Detection specification in text line '%s'\n", textLine);
+            System.out.println(e.getMessage());
+        }
 
         return newDetection;
     }
@@ -75,8 +87,6 @@ public class Detection {
 
     @Override
     public String toString() {
-        // TODO represent the detection in the format: licensePlate/city/dateTime
-
         return car.getLicensePlate() + "/" + city + "/" + dateTime;
     }
 
