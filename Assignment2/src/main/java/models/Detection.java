@@ -66,15 +66,17 @@ public class Detection {
      *          null if no offence was found.
      */
     public Violation validatePurple() {
-        if(this.car.getCarType() == CarType.Truck // Checks if car is truck or coach
-            || this.car.getCarType() == CarType.Coach
-            && this.car.getFuelType() == FuelType.Diesel // Checks if fuel is diesel
-        ){
-            if (this.car.getEmissionCategory() < 6){ // Checks if car can enter
-                return new Violation(this.car, this.city); // Returns a violation
-            }
+        CarType carType = this.car.getCarType();
+        FuelType fuelType = this.car.getFuelType();
+        int emissionCategory = this.car.getEmissionCategory();
+
+        if ((carType == CarType.Truck || carType == CarType.Coach) // Checks if car is a truck or coach
+                && fuelType == FuelType.Diesel // Checks if the fuel is diesel
+                && emissionCategory < 6) { // Checks if the emission category allows entry
+            return new Violation(this.car, this.city); // Returns a violation
         }
-        return null; // No violation needed
+
+        return null; // No violation found
     }
 
     public Car getCar() {
