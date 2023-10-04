@@ -93,10 +93,32 @@ public class OrderedArrayList<E>
         // TODO implement an iterative binary search on the sorted section of the arrayList, 0 <= index < nSorted
         //   to find the position of an item that matches searchItem (this.sortOrder comparator yields a 0 result)
 
+        this.sort();
 
+        int l = 0, r = nSorted - 1;
+        while (l <= r) {
+            int m = l + (r - l) / 2;
+
+            // Check if x is present at mid
+            if (this.get(m).equals(searchItem))
+                return m;
+
+            // If x greater, ignore left half
+            if (this.sortOrder.compare(this.get(m), searchItem) > 0)
+                l = m + 1;
+
+            // If x is smaller, ignore right half
+            else
+                r = m - 1;
+        }
 
         // TODO if no match was found, attempt a linear search of searchItem in the section nSorted <= index < size()
-
+        // If no match was found in the sorted section, attempt a linear search in the unsorted section
+        for (int i = nSorted; i < size(); i++) {
+            if (this.sortOrder.compare(this.get(i), searchItem) == 0) {
+                return i;
+            }
+        }
 
         return -1;  // nothing was found ???
     }
@@ -111,16 +133,38 @@ public class OrderedArrayList<E>
      * @return              the position index of the found item in the arrayList, or -1 if no item matches the search item.
      */
     public int indexOfByRecursiveBinarySearch(E searchItem) {
+        // Ensure that the list is sorted
+        this.sort();
 
-        // TODO implement a recursive binary search on the sorted section of the arrayList, 0 <= index < nSorted
-        //   to find the position of an item that matches searchItem (this.sortOrder comparator yields a 0 result)
+        int l = 0;
+        int r = nSorted - 1;
+        if (l <= r) {
+            int m = l + (r - l) / 2;
+            int comparisonResult = this.sortOrder.compare(this.get(m), searchItem);
 
+            if (comparisonResult == 0) {
+                // Found the item, return its position
+                return m;
+            } else if (comparisonResult > 0) {
+                // Search in the left half
+                r = m - 1;
+                return indexOfByRecursiveBinarySearch(searchItem);
+            } else {
+                // Search in the right half
+                l = m+ 1;
+                return indexOfByRecursiveBinarySearch(searchItem);
+            }
+        }
 
+        // If no match was found in the sorted section, attempt a linear search in the unsorted section
+        for (int i = nSorted; i < size(); i++) {
+            if (this.sortOrder.compare(this.get(i), searchItem) == 0) {
+                return i;
+            }
+        }
 
-        // TODO if no match was found, attempt a linear search of searchItem in the section nSorted <= index < size()
-
-
-        return -1;  // nothing was found ???
+        // Item not found
+        return -1;
     }
 
 
@@ -147,9 +191,9 @@ public class OrderedArrayList<E>
         } else {
             // TODO retrieve the matched item and
             //  replace the matched item in the list with the merger of the matched item and the newItem
-
-
-
+            E matchedItem = this.get(matchedItemIndex);
+            E mergedItem = merger.apply(matchedItem, newItem);
+            this.set(matchedItemIndex, mergedItem);
             return false;
         }
     }
