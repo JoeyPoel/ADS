@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -99,17 +100,21 @@ public class OrderedArrayList<E>
         while (l <= r) {
             int m = l + (r - l) / 2;
 
+            E newObject = this.get(m);
+
+            int compare = this.sortOrder.compare(newObject, searchItem);
+
             // Check if x is present at mid
-            if (this.get(m).equals(searchItem))
+            if (newObject.equals(searchItem))
                 return m;
 
             // If x greater, ignore left half
-            if (this.sortOrder.compare(this.get(m), searchItem) > 0)
-                l = m + 1;
+            if (this.sortOrder.compare(newObject, searchItem) > 0)
+                l = m - 1;
 
             // If x is smaller, ignore right half
             else
-                r = m - 1;
+                r = m + 1;
         }
 
         // TODO if no match was found, attempt a linear search of searchItem in the section nSorted <= index < size()
