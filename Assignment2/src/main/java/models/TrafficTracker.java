@@ -19,6 +19,10 @@ public class TrafficTracker {
         //  initalize violations with an empty ordered list which sorts items by car and city.
         //  Use your generic implementation class OrderedArrayList
 
+        cars = new OrderedArrayList<>(Comparator.comparing(Car::getLicensePlate));
+
+        violations = new OrderedArrayList<>(Comparator.comparing(Violation::getCar).thenComparing(Violation::getCity));
+
 
     }
 
@@ -184,13 +188,10 @@ public class TrafficTracker {
             String line = scanner.nextLine();
             numberOfLines++;
 
-            // TODO convert the line to an instance of E
-
-
-
-            // TODO add a successfully converted item to the list of items
-
-
+            E item = converter.apply(line);
+            if(item != null) {
+                items.add(item);
+            }
         }
 
         //System.out.printf("Imported %d lines from %s.\n", numberOfLines, file.getPath());
