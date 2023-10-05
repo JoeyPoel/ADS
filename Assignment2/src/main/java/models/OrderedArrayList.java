@@ -90,42 +90,43 @@ public class OrderedArrayList<E>
      * @return              the position index of the found item in the arrayList, or -1 if no item matches the search item.
      */
     public int indexOfByIterativeBinarySearch(E searchItem) {
-
-        // TODO implement an iterative binary search on the sorted section of the arrayList, 0 <= index < nSorted
-        //   to find the position of an item that matches searchItem (this.sortOrder comparator yields a 0 result)
-
+        // First, make sure the ArrayList is sorted using the sortOrder comparator
         this.sort();
 
-        int l = 0, r = nSorted - 1;
-        while (l <= r) {
-            int m = l + (r - l) / 2;
+        // Perform binary search in the sorted section
+        int left = 0;
+        int right = nSorted - 1;
 
-            E newObject = this.get(m);
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            E midItem = this.get(mid);
 
-            int compare = this.sortOrder.compare(newObject, searchItem);
+            int compare = this.sortOrder.compare(midItem, searchItem);
 
-            // Check if x is present at mid
-            if (newObject.equals(searchItem))
-                return m;
-
-            // If x greater, ignore left half
-            if (this.sortOrder.compare(newObject, searchItem) > 0)
-                l = m - 1;
-
-            // If x is smaller, ignore right half
-            else
-                r = m + 1;
+            if (compare == 0) {
+                // Match found in the sorted section
+                return mid;
+            } else if (compare < 0) {
+                // If midItem is less than searchItem, search the right half
+                left = mid + 1;
+            } else {
+                // If midItem is greater than searchItem, search the left half
+                right = mid - 1;
+            }
         }
 
-        // TODO if no match was found, attempt a linear search of searchItem in the section nSorted <= index < size()
-        // If no match was found in the sorted section, attempt a linear search in the unsorted section
+        // If no match was found in the sorted section, perform linear search in the unsorted section
         for (int i = nSorted; i < size(); i++) {
-            if (this.sortOrder.compare(this.get(i), searchItem) == 0) {
+            E current = this.get(i);
+
+            if (this.sortOrder.compare(current, searchItem) == 0) {
+                // Match found in the unsorted section
                 return i;
             }
         }
 
-        return -1;  // nothing was found ???
+        // If no match was found in either section, return -1
+        return -1;
     }
 
     /**
@@ -141,22 +142,22 @@ public class OrderedArrayList<E>
         // Ensure that the list is sorted
         this.sort();
 
-        int l = 0;
-        int r = nSorted - 1;
-        if (l <= r) {
-            int m = l + (r - l) / 2;
-            int comparisonResult = this.sortOrder.compare(this.get(m), searchItem);
+        int left = 0;
+        int right = nSorted - 1;
+        if (left <= right) {
+            int mid = left + (right - left) / 2;
+            int comparisonResult = this.sortOrder.compare(this.get(mid), searchItem);
 
             if (comparisonResult == 0) {
                 // Found the item, return its position
-                return m;
-            } else if (comparisonResult > 0) {
-                // Search in the left half
-                r = m - 1;
+                return mid;
+            } else if (comparisonResult < 0) {
+                // Search in the right half
+                left = mid + 1;
                 return indexOfByRecursiveBinarySearch(searchItem);
             } else {
-                // Search in the right half
-                l = m+ 1;
+                // Search in the left half
+                right = mid - 1;
                 return indexOfByRecursiveBinarySearch(searchItem);
             }
         }
