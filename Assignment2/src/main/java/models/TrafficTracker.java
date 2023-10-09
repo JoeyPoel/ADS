@@ -1,5 +1,6 @@
 package models;
 
+import javax.swing.table.TableStringConverter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
@@ -72,10 +73,9 @@ public class TrafficTracker {
             //  retrieve a list of all files and sub folders in this directory
             File[] filesInDirectory = Objects.requireNonNullElse(file.listFiles(), new File[0]);
 
-            // TODO recursively process all files and sub folders from the filesInDirectory list.
-            //  also track the total number of offences found
-
-
+            for(File subFile : filesInDirectory){
+                totalNumberOfOffences += this.mergeDetectionsFromFile(subFile);
+            }
 
         } else if (file.getName().matches(TRAFFIC_FILE_PATTERN)) {
             // the file is a regular file that matches the target pattern for raw detection files

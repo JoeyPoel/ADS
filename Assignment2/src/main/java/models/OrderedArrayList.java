@@ -144,6 +144,11 @@ public class OrderedArrayList<E>
 
         int left = 0;
         int right = nSorted - 1;
+
+        return indexOfByRecursiveBinarySearch(searchItem, left, right);
+    }
+
+    private int indexOfByRecursiveBinarySearch(E searchItem, int left, int right) {
         if (left <= right) {
             int mid = left + (right - left) / 2;
             int comparisonResult = this.sortOrder.compare(this.get(mid), searchItem);
@@ -154,11 +159,11 @@ public class OrderedArrayList<E>
             } else if (comparisonResult < 0) {
                 // Search in the right half
                 left = mid + 1;
-                return indexOfByRecursiveBinarySearch(searchItem);
+                return indexOfByRecursiveBinarySearch(searchItem, left, right);
             } else {
                 // Search in the left half
                 right = mid - 1;
-                return indexOfByRecursiveBinarySearch(searchItem);
+                return indexOfByRecursiveBinarySearch(searchItem, left, right);
             }
         }
 
