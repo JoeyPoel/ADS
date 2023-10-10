@@ -90,9 +90,6 @@ public class OrderedArrayList<E>
      * @return              the position index of the found item in the arrayList, or -1 if no item matches the search item.
      */
     public int indexOfByIterativeBinarySearch(E searchItem) {
-        // First, make sure the ArrayList is sorted using the sortOrder comparator
-        this.sort();
-
         // Perform binary search in the sorted section
         int left = 0;
         int right = nSorted - 1;
@@ -139,9 +136,6 @@ public class OrderedArrayList<E>
      * @return              the position index of the found item in the arrayList, or -1 if no item matches the search item.
      */
     public int indexOfByRecursiveBinarySearch(E searchItem) {
-        // Ensure that the list is sorted
-        this.sort();
-
         int left = 0;
         int right = nSorted - 1;
 
