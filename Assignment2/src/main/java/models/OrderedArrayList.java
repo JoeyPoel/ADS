@@ -211,12 +211,10 @@ public class OrderedArrayList<E>
     @Override
     public double aggregate(Function<E,Double> mapper) {
         double sum = 0.0;
-
-        // TODO loop over all items and use the mapper
-        //  to calculate and accumulate the contribution of each item
-
-
-
+        for (int i = 0; i < size(); i++) {
+            E current = this.get(i);
+            sum += mapper.apply(current);
+        }
         return sum;
     }
 }
