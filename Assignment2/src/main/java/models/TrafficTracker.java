@@ -75,7 +75,7 @@ public class TrafficTracker {
             File[] filesInDirectory = Objects.requireNonNullElse(file.listFiles(), new File[0]);
 
             for(File subFile : filesInDirectory){
-                totalNumberOfOffences += this.mergeDetectionsFromFile(subFile);
+                totalNumberOfOffences += this.mergeDetectionsFromVaultRecursively(subFile);
             }
 
         } else if (file.getName().matches(TRAFFIC_FILE_PATTERN)) {
@@ -112,15 +112,16 @@ public class TrafficTracker {
             if (violation != null) {
                 // Check if the violation already exists in this.violations
                 Optional<Violation> existingViolation = this.violations.stream()
-                        .filter(v -> v.getCar().equals(violation.getCar()) && v.getCity().equals(violation.getCity()))
+                        .filter(v -> v.getCar().getLicensePlate().equals(violation.getCar().getLicensePlate()) && v.getCity().equals(violation.getCity()))
                         .findFirst();
 
                 if (existingViolation.isPresent()) {
                     // If the violation already exists, update its offencesCount
                     existingViolation.get().setOffencesCount(existingViolation.get().getOffencesCount() + 1);
                 } else {
-                    // If the violation does not exist, add it to this.violations
+                    // If the violation does not exist, add it to this.violations and to this.cars
                     this.violations.add(violation);
+                    this.cars.add(violation.getCar());
                 }
 
                 totalNumberOfOffences++;
