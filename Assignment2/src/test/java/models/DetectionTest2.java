@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class DetectionTest2 {
@@ -33,5 +34,24 @@ public class DetectionTest2 {
         cars = new ArrayList<>(List.of(scoda, audi, mercedes, bmw, icova, volvo1, volvo2, daf1, daf2, kamaz));
     }
 
+    @Test
+    public void testValidatePurpleViolation() {
+        // Create a Detection instance that should result in a Violation
+        Detection detection1 = new Detection(volvo2, "Amsterdam", LocalDateTime.of(2022, 10, 1, 12, 11, 10));
 
+        // Validate against purple conditions
+        Violation violation1 = detection1.validatePurple();
+        assertSame(volvo2, violation1.getCar());
+        assertEquals("Amsterdam", violation1.getCity());
+    }
+
+    @Test
+    public void testValidatePurpleNoViolation() {
+        // Create a Detection instance that should not result in a Violation
+        Detection detection2 = new Detection(scoda, "Rotterdam", LocalDateTime.of(2022, 10, 1, 12, 11, 10));
+
+        // Validate against purple conditions
+        Violation violation2 = detection2.validatePurple();
+        assertNull(violation2);
+    }
 }
