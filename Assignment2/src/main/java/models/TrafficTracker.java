@@ -21,9 +21,9 @@ public class TrafficTracker {
         //  initalize violations with an empty ordered list which sorts items by car and city.
         //  Use your generic implementation class OrderedArrayList
 
-        cars = new OrderedArrayList<>(Comparator.comparing(Car::getLicensePlate));
 
-        violations = new OrderedArrayList<>(Comparator.comparing(Violation::getCar).thenComparing(Violation::getCity));
+        this.cars = new OrderedArrayList<>(Car::compareTo);
+        this.violations = new OrderedArrayList<>(Violation::compareByLicensePlateAndCity);
 
 
     }
