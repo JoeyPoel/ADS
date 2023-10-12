@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 public class TrafficTracker {
@@ -92,28 +93,39 @@ public class TrafficTracker {
      * @param file
      */
     private int mergeDetectionsFromFile(File file) {
-
-        // re-sort the accumulated violations for efficient searching and merging
+        // Re-sort the accumulated violations for efficient searching and merging
         this.violations.sort();
 
-        // use a regular ArrayList to load the raw detection info from the file
+        // Use a regular ArrayList to load the raw detection info from the file
         List<Detection> newDetections = new ArrayList<>();
 
-        // TODO import all detections from the specified file into the newDetections list
-        //  using the importItemsFromFile helper method and the Detection.fromLine parser.
-
-
-
+        // Import all detections from the specified file into the newDetections list
+        importItemsFromFile(newDetections, file, s -> Detection.fromLine(s, cars));
         System.out.printf("Imported %d detections from %s.\n", newDetections.size(), file.getPath());
 
-        int totalNumberOfOffences = 0; // tracks the number of offences that emerges from the data in this file
+        int totalNumberOfOffences = 0; // Tracks the number of offences that emerge from the data in this file
 
-        // TODO validate all detections against the purple criteria and
-        //  merge any resulting offences into this.violations, accumulating offences per car and per city
-        //  also keep track of the totalNumberOfOffences for reporting
+        // Validate all detections against the purple criteria and
+        // merge any resulting offences into this.violations, accumulating offences per car and per city
+        for (Detection newDetection : newDetections) {
+            Violation violation = newDetection.validatePurple();
+            if (violation != null) {
+                // Check if the violation already exists in this.violations
+                Optional<Violation> existingViolation = this.violations.stream()
+                        .filter(v -> v.getCar().equals(violation.getCar()) && v.getCity().equals(violation.getCity()))
+                        .findFirst();
 
+                if (existingViolation.isPresent()) {
+                    // If the violation already exists, update its offencesCount
+                    existingViolation.get().setOffencesCount(existingViolation.get().getOffencesCount() + 1);
+                } else {
+                    // If the violation does not exist, add it to this.violations
+                    this.violations.add(violation);
+                }
 
-
+                totalNumberOfOffences++;
+            }
+        }
 
         return totalNumberOfOffences;
     }
