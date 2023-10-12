@@ -34,22 +34,18 @@ public class DetectionTest2 {
 
     @Test
     public void testValidatePurpleViolation() {
-        // Create a Detection instance that should result in a Violation
         Detection detection1 = new Detection(volvo1, "Amsterdam", LocalDateTime.of(2022, 10, 1, 12, 11, 10));
 
-        // Validate against purple conditions
         Violation violation1 = detection1.validatePurple();
-        assertNotNull(violation1); // Assert that a Violation should be returned
+        assertNotNull(violation1);
         assertEquals(volvo1, violation1.getCar());
         assertEquals("Amsterdam", violation1.getCity());
     }
 
     @Test
     public void testValidatePurpleNoViolation() {
-        // Create a Detection instance that should not result in a Violation
         Detection detection2 = new Detection(scoda, "Rotterdam", LocalDateTime.of(2022, 10, 1, 12, 11, 10));
 
-        // Validate against purple conditions
         Violation violation2 = detection2.validatePurple();
         assertNull(violation2);
     }
