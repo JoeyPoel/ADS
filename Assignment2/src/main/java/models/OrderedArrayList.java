@@ -50,6 +50,36 @@ public class OrderedArrayList<E>
     //  (hint: only change nSorted as required to guarantee the representation invariant,
     //   do not invoke a sort or reorder items otherwise differently than is specified by the ArrayList contract)
 
+    @Override
+    public void add(int index, E item) {
+        super.add(index, item); // Call the super class method to insert the item
+        if (index <= nSorted) {
+            nSorted++; // Increment nSorted if the item is added in the sorted section
+        }
+    }
+
+    @Override
+    public E remove(int index) {
+        E removedItem = super.remove(index); // Call the super class method to remove the item
+        if (index < nSorted) {
+            nSorted--; // Decrement nSorted if the removed item was in the sorted section
+        }
+        return removedItem;
+    }
+
+    @Override
+    public boolean remove(Object obj) {
+        int index = super.indexOf(obj); // Find the index of the object using the super class method
+        if (index >= 0) {
+            super.remove(index); // Remove the object
+            if (index < nSorted) {
+                nSorted--; // Decrement nSorted if the removed object was in the sorted section
+            }
+            return true;
+        }
+        return false; // Object not found
+    }
+
 
 
 
