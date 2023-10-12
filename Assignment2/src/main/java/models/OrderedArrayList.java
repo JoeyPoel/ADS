@@ -98,7 +98,11 @@ public class OrderedArrayList<E>
             int mid = left + (right - left) / 2;
             E midItem = this.get(mid);
 
+
+
             int compare = this.sortOrder.compare(midItem, searchItem);
+
+
 
             if (compare == 0) {
                 // Match found in the sorted section
@@ -162,7 +166,7 @@ public class OrderedArrayList<E>
         }
 
         // If no match was found in the sorted section, attempt a linear search in the unsorted section
-        for (int i = nSorted; i < size(); i++) {
+        for (int i = nSorted - 1; i < size(); i++) {
             if (this.sortOrder.compare(this.get(i), searchItem) == 0) {
                 return i;
             }

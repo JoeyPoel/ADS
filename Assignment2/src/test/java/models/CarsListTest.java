@@ -180,7 +180,7 @@ public class CarsListTest {
         assertEquals(cars.size()-5, cars.indexOf(daf2),
                 "add(index, item) shall insert the item at the specified index");
         checkRepresentationInvariant(this.cars);
-        cars.add(cars.size()-2, daf3);
+            cars.add(cars.size()-2, daf3);
         assertEquals(cars.size()-3, cars.indexOf(daf3),
                 "add(index, item) shall insert the item at the specified index");
         checkRepresentationInvariant(this.cars);
