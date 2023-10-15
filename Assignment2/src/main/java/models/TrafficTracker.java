@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TrafficTracker {
     private final String TRAFFIC_FILE_EXTENSION = ".txt";
@@ -151,37 +152,53 @@ public class TrafficTracker {
     }
 
     /**
+     * Retrieves the top `Violation` objects based on their number of offenses and a specified grouping criterion.
+     *
+     * @param groupByFunction A function used to group `Violation` objects. E.g., group by Car or City.
+     * @param topNumber The number of top violations to retrieve.
+     * @return Returns a list of top `Violation` objects sorted by their offenses count in descending order and grouped by the provided criterion.
+     */
+
+    private List<Violation> topViolations(Function<Violation, ?> groupByFunction, int topNumber) {
+        // Merges all violations from this.violations into a new OrderedArrayList which orders and
+        // aggregates violations by Car/City
+        Map<Object, Violation> groupedViolations = violations.stream()
+                .collect(Collectors.toMap(
+                        groupByFunction,
+                        Function.identity(),
+                        Violation::combineOffencesCounts
+                ));
+
+        // Sort the new list by decreasing offencesCount.
+        List<Violation> sortedViolations = groupedViolations.values().stream()
+                .sorted((v1, v2) -> Integer.compare(v2.getOffencesCount(), v1.getOffencesCount()))
+                .collect(Collectors.toList());
+
+        // Use .subList to return only the topNumber of violations from the sorted list
+        return sortedViolations.subList(0, Math.min(topNumber, sortedViolations.size()));
+    }
+
+    /**
      * Prepares a list of topNumber of violations that show the highest offencesCount
      * when this.violations are aggregated by car across all cities.
-     * @param topNumber     the requested top number of violations in the result list
-     * @return              a list of topNum items that provides the top aggregated violations
+     *
+     * @param topNumber the requested top number of violations in the result list
+     * @return a list of topNum items that provides the top aggregated violations
      */
+
     public List<Violation> topViolationsByCar(int topNumber) {
-
-        // TODO merge all violations from this.violations into a new OrderedArrayList
-        //   which orders and aggregates violations by city
-        // TODO sort the new list by decreasing offencesCount.
-        // TODO use .subList to return only the topNumber of violations from the sorted list
-        //  (You may want to prepare/reuse a local private method for all this)
-
-        return null;  // replace this reference
+        return topViolations(Violation::getCar, topNumber);
     }
 
     /**
      * Prepares a list of topNumber of violations that show the highest offencesCount
      * when this.violations are aggregated by city across all cars.
-     * @param topNumber     the requested top number of violations in the result list
-     * @return              a list of topNum items that provides the top aggregated violations
+     *
+     * @param topNumber the requested top number of violations in the result list
+     * @return a list of topNum items that provides the top aggregated violations
      */
     public List<Violation> topViolationsByCity(int topNumber) {
-
-        // TODO merge all violations from this.violations into a new OrderedArrayList
-        //   which orders and aggregates violations by Car
-        // TODO sort the new list by decreasing offencesCount.
-        // TODO use .subList to return only the topNumber of violations from the sorted list
-        //  (You may want to prepare/reuse a local private method for all this)
-
-        return null;  // replace this reference
+        return topViolations(Violation::getCity, topNumber);
     }
 
 
