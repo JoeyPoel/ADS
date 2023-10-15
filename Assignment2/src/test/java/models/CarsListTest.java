@@ -172,6 +172,9 @@ public class CarsListTest {
     public void insertSustainsRepresentationInvariant() {
         cars.sort();
         cars.add(cars.size()-1, volvo2);
+        System.out.println(cars.size() - 2);
+        System.out.println(cars.indexOf(volvo2));
+
         assertEquals(cars.size()-2, cars.indexOf(volvo2),
                 "add(index, item) shall insert the item at the specified index");
         assertNotEquals(cars.size(), cars.nSorted,

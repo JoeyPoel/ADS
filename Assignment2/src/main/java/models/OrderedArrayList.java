@@ -51,10 +51,11 @@ public class OrderedArrayList<E>
     //   do not invoke a sort or reorder items otherwise differently than is specified by the ArrayList contract)
 
     @Override
-    public void add(int index, E item) {
-        super.add(index, item); // Call the super class method to insert the item
-        if (index <= nSorted) {
-            nSorted++; // Increment nSorted if the item is added in the sorted section
+    public void add(int index, E element) {
+        super.add(index, element);
+        if (index < nSorted) {
+            // If an element was added within the sorted section, the order might be disrupted.
+            nSorted = index;
         }
     }
 
@@ -128,11 +129,7 @@ public class OrderedArrayList<E>
             int mid = left + (right - left) / 2;
             E midItem = this.get(mid);
 
-
-
             int compare = this.sortOrder.compare(midItem, searchItem);
-
-
 
             if (compare == 0) {
                 // Match found in the sorted section
