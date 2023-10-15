@@ -38,24 +38,16 @@ public class Detection {
      * or null if the textLine is corrupt or incomplete
      */
     public static Detection fromLine(String textLine, List<Car> cars) {
-        Detection newDetection = null;
-        // extract the comma-separated fields from the textLine
-        String[] fields = textLine.split(",");
-        try {
-            // parse the fields and instantiate a new detection
-            newDetection = new Detection(
-                    cars.get(cars.indexOf(new Car(fields[0].trim()))),
-                    fields[1].trim(),
-                    LocalDateTime.parse(fields[2].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
+        String[] parts = textLine.split(",");
+        if (parts.length != 3) return null;
 
-            );
-        } catch (Exception e) {
-            // any of the parse and valueOf methods could throw an exception on a format mismatch
-            System.out.printf("Could not parse Detection specification in text line '%s'\n", textLine);
-            System.out.println(e.getMessage());
-        }
+        String licensePlate = parts[0].trim();
+        int carIndex = cars.indexOf(new Car(licensePlate));
 
-        return newDetection;
+        Car detectedCar = (carIndex != -1) ? cars.get(carIndex) : new Car(licensePlate);
+        if (carIndex == -1) cars.add(detectedCar);
+
+        return new Detection(detectedCar, parts[1].trim(), LocalDateTime.parse(parts[2].trim()));
     }
 
     /**
