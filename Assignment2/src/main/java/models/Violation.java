@@ -35,7 +35,7 @@ public class Violation {
     public Violation combineOffencesCounts(Violation other) {
         Violation combinedViolation = new Violation(
                 // nullify the car attribute iff this.car does not match other.car
-                this.car != null && this.car.equals(other.car) ? this.car : null,
+                this.car != null && this.car.equals(other.car) ? this.car : new Car("null"),
                 // nullify the city attribute iff this.city does not match other.city
                 this.city != null && this.city.equals(other.city) ? this.city : null);
 
