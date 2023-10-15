@@ -134,17 +134,28 @@ public class TrafficTracker {
      * @return      the total amount of money recovered from all violations
      */
     public double calculateTotalFines() {
-        return this.violations.stream()
-                .mapToDouble(violation -> {
-                    if (violation.getCar().getCarType() == Car.CarType.Truck) {
-                        return 25.0 * violation.getOffencesCount();
-                    } else if (violation.getCar().getCarType() == Car.CarType.Coach) {
-                        return 35.0 * violation.getOffencesCount();
-                    } else {
-                        return 0.0; // Handle other car types if needed
-                    }
-                })
-                .sum();
+        // Use the aggregate method to calculate the total fines
+        double totalFines = this.violations.aggregate(violation -> {
+            // Define the fine amounts per vehicle type
+            final double truckFineAmount = 25.0;
+            final double coachFineAmount = 35.0;
+
+            // Get the vehicle type from the violation
+            Car.CarType vehicleType = violation.getCar().getCarType();
+
+            // Calculate the fine amount based on the vehicle type
+            double fine = 0.0;
+            if (Car.CarType.Truck.equals(vehicleType)) {
+                fine = truckFineAmount;
+            } else if (Car.CarType.Coach.equals(vehicleType)) {
+                fine = coachFineAmount;
+            }
+
+            // Multiply the fine amount by the number of offenses for this violation
+            return fine * violation.getOffencesCount();
+        });
+
+        return totalFines;
     }
 
     /**
