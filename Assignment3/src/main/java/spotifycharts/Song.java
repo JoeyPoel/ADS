@@ -34,9 +34,6 @@ public class Song {
 
 
 
-    /**
-     * Constructs a new instance of Song based on given attribute values
-     */
     public Song(String artist, String title, Language language) {
         this.artist = artist;
         this.title = title;
@@ -52,7 +49,7 @@ public class Song {
      */
     public void setStreamsCountOfCountry(Country country, int streamsCount) {
         // TODO register the streams count for the given country.
-
+        streamsCountPerCountry.put(country, streamsCount);
     }
 
     /**
