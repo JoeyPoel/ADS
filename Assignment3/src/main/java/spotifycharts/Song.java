@@ -85,7 +85,7 @@ public class Song {
     public int compareByHighestStreamsCountTotal(Song other) {
         // TODO compare the total of stream counts of this song across all countries
         //  with the total of the other song
-        return Integer.compare(this.getStreamsCountTotal(), other.getStreamsCountTotal());
+        return Integer.compare(other.getStreamsCountTotal(), this.getStreamsCountTotal());
     }
 
     /**
@@ -98,10 +98,22 @@ public class Song {
         // TODO compare this song with the other song
         //  ordening all Dutch songs upfront and then by decreasing total number of streams
         int compareResult;
+        int compareDutch;
+        int thisIsDutch = 0;
+        int otherIsDutch = 0;
         if(this.language == Language.NL){
-            compareResult = -1;
+            thisIsDutch = 1;
+        }
+        if (other.language == Language.NL){
+            otherIsDutch = 1;
+        }
+
+        compareDutch = Integer.compare(otherIsDutch, thisIsDutch);
+
+        if(compareDutch == 0) {
+            compareResult = Integer.compare(other.getStreamsCountTotal(), this.getStreamsCountTotal());
         } else{
-            compareResult = Integer.compare(this.getStreamsCountTotal(), other.getStreamsCountTotal());
+            return compareDutch;
         }
         return compareResult;
     }
