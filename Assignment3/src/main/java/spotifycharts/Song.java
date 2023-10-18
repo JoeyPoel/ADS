@@ -59,7 +59,7 @@ public class Song {
      */
     public int getStreamsCountOfCountry(Country country) {
         // TODO retrieve the streams count for the given country.
-        return streamsCountPerCountry.get(country);
+        return streamsCountPerCountry.getOrDefault(country, 0);
     }
     /**
      * Calculates/retrieves the total of all streams counts across all countries from this song
