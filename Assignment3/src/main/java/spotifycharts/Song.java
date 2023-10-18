@@ -112,11 +112,8 @@ public class Song {
      * @return
      */
     public int isDutch(Song song){
-        if(song.language == Language.NL){
-            return 1;
-        } else {
-            return 0;
-        }
+
+        return song.language == Language.NL ? 1 : 0;
     }
 
     public String getArtist() {
