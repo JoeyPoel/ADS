@@ -97,27 +97,28 @@ public class Song {
     public int compareForDutchNationalChart(Song other) {
         // TODO compare this song with the other song
         //  ordening all Dutch songs upfront and then by decreasing total number of streams
-        int compareResult;
         int compareDutch;
-        int thisIsDutch = 0;
-        int otherIsDutch = 0;
-        if(this.language == Language.NL){
-            thisIsDutch = 1;
-        }
-        if (other.language == Language.NL){
-            otherIsDutch = 1;
-        }
-
-        compareDutch = Integer.compare(otherIsDutch, thisIsDutch);
+        compareDutch = Integer.compare(isDutch(other), isDutch(this));
 
         if(compareDutch == 0) {
-            compareResult = Integer.compare(other.getStreamsCountTotal(), this.getStreamsCountTotal());
+            return Integer.compare(other.getStreamsCountTotal(), this.getStreamsCountTotal());
         } else{
             return compareDutch;
         }
-        return compareResult;
     }
 
+    /**
+     * Checks if song language is Dutch, if so returns 1 if not returns 0
+     * @param song
+     * @return
+     */
+    public int isDutch(Song song){
+        if(song.language == Language.NL){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     public String getArtist() {
         return artist;
