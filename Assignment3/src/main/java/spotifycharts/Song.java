@@ -97,8 +97,7 @@ public class Song {
     public int compareForDutchNationalChart(Song other) {
         // TODO compare this song with the other song
         //  ordening all Dutch songs upfront and then by decreasing total number of streams
-        int compareDutch;
-        compareDutch = Integer.compare(isDutch(other), isDutch(this));
+        int compareDutch = Integer.compare(isDutch(other), isDutch(this));
 
         if(compareDutch == 0) {
             return Integer.compare(other.getStreamsCountTotal(), this.getStreamsCountTotal());
