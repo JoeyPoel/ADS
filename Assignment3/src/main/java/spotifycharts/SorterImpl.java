@@ -128,23 +128,42 @@ public class SorterImpl<E> implements Sorter<E> {
         // the first numTops positions of the list now contain the lead collection
         // the reverseComparator heap condition applies to this lead collection
         // now use heapSort to realise full ordening of this collection
-        for (int i = numTops-1; i > 0; i--) {
+        for (int i = numTops - 1; i > 0; i--) {
             // loop-invariant: items[i+1..numTops-1] contains the tail part of the sorted lead collection
             // position 0 holds the root item of a heap of size i+1 organised by reverseComparator
             // this root item is the worst item of the remaining front part of the lead collection
 
             // TODO swap item[0] and item[i];
             //  this moves item[0] to its designated position
-
-
+            items.set(0, items.get(i));
+            items.set(i, items.get(0));
 
             // TODO the new root may have violated the heap condition
             //  repair the heap condition on the remaining heap of size i
+            E root = items.get(0); // Initialize root
+            E left = items.get(2 * i + 1); // left = 2*i + 1
+            E right = items.get(2 * i + 2); // right = 2*i + 2
+            E n = items.get(numTops - 1); // Initializes n as last item
 
+            // If left child is larger than root
+            if (comparator.compare(left, root) < 0 && comparator.compare(left, root) > 0)
+                root = left;
 
+            // If right child is larger than largest so far
+            if (comparator.compare(right, n) < 0 && comparator.compare(right, root) > 0)
+                root = right;
 
+            // If largest is not root
+            if (root != items.get(i)) {
+                E swap = items.get(i);
+                items.set(i, root);
+                items.set(0, swap);
+
+                // Recursively heapify the affected sub-tree
+//                heapify(arr, n, root);
+
+            }
         }
-
         return items;
     }
 
