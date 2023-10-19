@@ -19,6 +19,7 @@ public class SorterImpl<E> implements Sorter<E> {
 
 
 
+
         return items;   // replace as you find appropriate
     }
 
@@ -33,42 +34,10 @@ public class SorterImpl<E> implements Sorter<E> {
     public List<E> quickSort(List<E> items, Comparator<E> comparator) {
         // TODO provide a recursive quickSort implementation,
         //  that is different from the example given in the lecture
-        if (items == null || items.size() <= 1 ) {
-            return items;
-        }
 
-        recursiveQuickSort(items, 0, items.size() - 1, comparator);
-        return items;
-    }
 
-    private void recursiveQuickSort(List<E> items, int startIndex, int lastIndex, Comparator<E> comparator) {
-        if (startIndex < lastIndex) {
-            int middleIndex = partition(items, startIndex, lastIndex, comparator);
-            recursiveQuickSort(items, startIndex, middleIndex - 1, comparator);
-            recursiveQuickSort(items, middleIndex + 1, lastIndex, comparator);
-        }
-    }
 
-    private int partition(List<E> items, int low, int high, Comparator<E> comparator) {
-        E middle = items.get(high);
-        int i = low - 1;
-
-        for (int j = low; j < high; j++) {
-            if (comparator.compare(items.get(j), middle) <= 0 ) {
-                i++;
-                swap(items, i, j);
-            }
-        }
-
-        swap(items, i + 1, high);
-        return i + 1;
-
-    }
-
-    private void swap(List<E> items, int i, int j) {
-        E temp = items.get(i);
-        items.set(i, items.get(j));
-        items.set(j, temp);
+        return items;   // replace as you find appropriate
     }
 
     /**
