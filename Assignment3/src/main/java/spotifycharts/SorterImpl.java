@@ -16,12 +16,24 @@ public class SorterImpl<E> implements Sorter<E> {
      */
     public List<E> selInsBubSort(List<E> items, Comparator<E> comparator) {
         // TODO implement selection sort or insertion sort or bubble sort
+        for (int i = 0; i < items.size() - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < items.size(); j++) {
+                if (comparator.compare(items.get(j), items.get(minIndex)) < 0) {
+                    minIndex = j;
+                }
+            }
+            if (minIndex != i) {
+                E temp = items.get(i);
+                items.set(i, items.get(minIndex));
+                items.set(minIndex, temp);
+            }
+        }
 
-
-
-
-        return items;   // replace as you find appropriate
+        return items;
     }
+
+
 
     /**
      * Sorts all items by quick sort using the provided comparator
