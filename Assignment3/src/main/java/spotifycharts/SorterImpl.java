@@ -135,12 +135,12 @@ public class SorterImpl<E> implements Sorter<E> {
 
             // TODO swap item[0] and item[i];
             //  this moves item[0] to its designated position
-            items.set(0, items.get(i));
-            items.set(i, items.get(0));
+            swap(items, 0, i);
 
             // TODO the new root may have violated the heap condition
             //  repair the heap condition on the remaining heap of size i
-            }
+            heapSink(items, i, reverseComparator);
+        }
         return items;
     }
 
