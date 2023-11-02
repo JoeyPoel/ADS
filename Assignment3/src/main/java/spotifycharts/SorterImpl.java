@@ -135,7 +135,8 @@ public class SorterImpl<E> implements Sorter<E> {
 
             // TODO swap item[0] and item[i];
             //  this moves item[0] to its designated position
-            swap(items, 0, i);
+            items.set(0, items.get(i));
+            items.set(i, items.get(0));
 
             // TODO the new root may have violated the heap condition
             //  repair the heap condition on the remaining heap of size i
@@ -145,16 +146,22 @@ public class SorterImpl<E> implements Sorter<E> {
             E n = items.get(numTops - 1); // Initializes n as last item
 
             // If left child is larger than root
-            if (comparator.compare(left, n) < 0 && comparator.compare(left, root) > 0) {
+            if (comparator.compare(left, n) < 0 && comparator.compare(left, root) > 0)
                 root = left;
-            }
+
             // If right child is larger than largest so far
-            if (comparator.compare(right, n) < 0 && comparator.compare(right, root) > 0) {
+            if (comparator.compare(right, n) < 0 && comparator.compare(right, root) > 0)
                 root = right;
-            }
+
             // If largest is not root
             if (root != items.get(i)) {
-                swap(items, i, 0);
+                E swap = items.get(i);
+                items.set(i, root);
+                items.set(0, swap);
+
+                // Recursively heapify the affected sub-tree
+//                heapify(arr, n, root);
+
             }
         }
         return items;
@@ -173,6 +180,20 @@ public class SorterImpl<E> implements Sorter<E> {
     protected void heapSwim(List<E> items, int heapSize, Comparator<E> comparator) {
         // TODO swim items[heapSize-1] up the heap until
         //      i==0 || items[(i-1]/2] <= items[i]
+
+        int childIndex = heapSize - 1;
+
+        while (childIndex > 0) {
+            int parentIndex = (childIndex - 1) / 2;
+
+            if (comparator.compare(items.get(childIndex), items.get(parentIndex)) < 0) {
+
+                swap(items, childIndex, parentIndex);
+                childIndex = parentIndex;
+            } else {
+                break;
+            }
+        }
 
 
 
