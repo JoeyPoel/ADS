@@ -24,9 +24,7 @@ public class SorterImpl<E> implements Sorter<E> {
                 }
             }
             if (minIndex != i) {
-                E temp = items.get(i);
-                items.set(i, items.get(minIndex));
-                items.set(minIndex, temp);
+                swap(items, i, minIndex);
             }
         }
 
