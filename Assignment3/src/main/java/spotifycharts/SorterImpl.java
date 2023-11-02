@@ -146,7 +146,7 @@ public class SorterImpl<E> implements Sorter<E> {
             E n = items.get(numTops - 1); // Initializes n as last item
 
             // If left child is larger than root
-            if (comparator.compare(left, root) < 0 && comparator.compare(left, root) > 0)
+            if (comparator.compare(left, n) < 0 && comparator.compare(left, root) > 0)
                 root = left;
 
             // If right child is larger than largest so far
@@ -180,6 +180,20 @@ public class SorterImpl<E> implements Sorter<E> {
     protected void heapSwim(List<E> items, int heapSize, Comparator<E> comparator) {
         // TODO swim items[heapSize-1] up the heap until
         //      i==0 || items[(i-1]/2] <= items[i]
+
+        int childIndex = heapSize - 1;
+
+        while (childIndex > 0) {
+            int parentIndex = (childIndex - 1) / 2;
+
+            if (comparator.compare(items.get(childIndex), items.get(parentIndex)) < 0) {
+
+                swap(items, childIndex, parentIndex);
+                childIndex = parentIndex;
+            } else {
+                break;
+            }
+        }
 
 
 
