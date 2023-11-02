@@ -140,30 +140,7 @@ public class SorterImpl<E> implements Sorter<E> {
 
             // TODO the new root may have violated the heap condition
             //  repair the heap condition on the remaining heap of size i
-            E root = items.get(0); // Initialize root
-            E left = items.get(2 * i + 1); // left = 2*i + 1
-            E right = items.get(2 * i + 2); // right = 2*i + 2
-            E n = items.get(numTops - 1); // Initializes n as last item
-
-            // If left child is larger than root
-            if (comparator.compare(left, n) < 0 && comparator.compare(left, root) > 0)
-                root = left;
-
-            // If right child is larger than largest so far
-            if (comparator.compare(right, n) < 0 && comparator.compare(right, root) > 0)
-                root = right;
-
-            // If largest is not root
-            if (root != items.get(i)) {
-                E swap = items.get(i);
-                items.set(i, root);
-                items.set(0, swap);
-
-                // Recursively heapify the affected sub-tree
-//                heapify(arr, n, root);
-
             }
-        }
         return items;
     }
 
@@ -211,8 +188,27 @@ public class SorterImpl<E> implements Sorter<E> {
     protected void heapSink(List<E> items, int heapSize, Comparator<E> comparator) {
         // TODO sink items[0] down the heap until
         //      2*i+1>=heapSize || (items[i] <= items[2*i+1] && items[i] <= items[2*i+2])
+        int parentIndex = 0;
 
+        while (true) {
+            int leftChildIndex = 2 * parentIndex + 1;
+            int rightChildIndex = 2 * parentIndex + 2;
+            int smallest = parentIndex;
 
+            if (leftChildIndex < heapSize && comparator.compare(items.get(leftChildIndex), items.get(smallest)) < 0){
+                smallest = leftChildIndex;
+            }
 
+            if (rightChildIndex < heapSize && comparator.compare(items.get(rightChildIndex), items.get(smallest)) < 0){
+                smallest = rightChildIndex;
+            }
+
+            if (smallest == parentIndex) {
+                break;
+            }
+
+            swap(items, parentIndex, smallest);
+            parentIndex = smallest;
+        }
     }
 }
