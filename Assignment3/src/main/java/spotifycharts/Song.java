@@ -94,7 +94,7 @@ public class Song {
      * @param other     the other song to compare against
      * @return  negative number, zero or positive number according to Comparator conventions
      */
-    public int compareForDutchNationalChart(Song other) {
+    public int  compareForDutchNationalChart(Song other) {
         // TODO compare this song with the other song
         //  ordening all Dutch songs upfront and then by decreasing total number of streams
         int compareDutch = Integer.compare(isDutch(other), isDutch(this));
