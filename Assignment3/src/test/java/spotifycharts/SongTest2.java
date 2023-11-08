@@ -57,5 +57,26 @@ public class SongTest2 {
         assertEquals(result1,-result2);
     }
 
+    @Test
+    void streamsCountUpdate() {
+        songBYC.setStreamsCountOfCountry(Song.Country.UK, 100);
+
+        songBYC.setStreamsCountOfCountry(Song.Country.UK, 150);
+
+        assertEquals(150, songBYC.getStreamsCountOfCountry(Song.Country.UK),
+                "Stream count update did not work as expected");
+    }
+
+    @Test
+    void retrieveStreamsForUnsetCountry() {
+        int streamsFR = songBYC.getStreamsCountOfCountry(Song.Country.FR);
+        int streamsIT = songTS.getStreamsCountOfCountry(Song.Country.IT);
+
+        assertEquals(0, streamsFR, "Stream count for unset country should be 0");
+        assertEquals(0, streamsIT, "Stream count for unset country should be 0");
+    }
+
+
+
 }
 
