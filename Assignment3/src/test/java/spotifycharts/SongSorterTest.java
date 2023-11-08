@@ -112,7 +112,6 @@ class SongSorterTest {
             this.songSorter.heapSwim(this.heap, heapSize, this.heapComparator);
 
             this.checkZeroBasedHeapCondition(this.heap, heapSize, this.heapComparator);
-
             // check whether all songs are still in the heap
             assertEquals(preHeap, Set.copyOf(this.heap.subList(0, heapSize)),
                     "The set of songs should not change when changing the order in Swim; Error when heapSize="+heapSize);
