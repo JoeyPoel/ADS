@@ -20,7 +20,6 @@ public class SorterImpl<E> implements Sorter<E> {
     public List<E> selInsBubSort(List<E> items, Comparator<E> comparator) {
         // TODO implement selection sort or insertion sort or bubble sort
 
-        startTime = System.currentTimeMillis();
         for (int i = 0; i < items.size() - 1; i++) {
             int minIndex = i;
             for (int j = i + 1; j < items.size(); j++) {
@@ -33,10 +32,7 @@ public class SorterImpl<E> implements Sorter<E> {
             }
         }
 
-        endTime = System.currentTimeMillis();
-        System.out.println(
-                "Total execution time to add new item " + (endTime - startTime) + "ms for items of size" + items.size()
-        );
+
         return items;
     }
 
