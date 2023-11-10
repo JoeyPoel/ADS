@@ -6,46 +6,43 @@ import java.util.List;
 public class SpotifyChartsMain {
     public static void main(String[] args) {
         System.out.println("Welcome to the HvA Spotify Charts Calculator\n");
-
-
-        sum(100);
-
+        evaluateSortingAlgorithms();
     }
 
-    public static int sum(int k) {
-        if (k < 50000000) {
-            long startTime;
-            long endTime;
+    public static void evaluateSortingAlgorithms() {
+        int initialSize = 100;
+        long maxSongs = 5000000;
+        long maxTime = 20000; // 20 seconds
 
-
+        while (initialSize <= maxSongs) {
+            long startTime, endTime, totalExecutionTime;
             Sorter<Song> sorter = new SongSorter();
-
 
             for (int algorithm = 1; algorithm <= 4; algorithm++) {
                 boolean algorithmExceededTime = false;
-                long totalExecutionTime = 0;
+                totalExecutionTime = 0;
 
+                System.out.println("-------------------------------------------------------");
+                System.out.println("\nAlgorithm " + algorithm + ":");
 
                 for (int i = 0; i < 10; i++) {
-
-
                     ChartsCalculator chartsCalculator = new ChartsCalculator(algorithm * i);
 
-                    List<Song> songs = chartsCalculator.registerStreamedSongs(k);
+                    List<Song> songs = chartsCalculator.registerStreamedSongs(initialSize);
 
                     startTime = System.currentTimeMillis();
                     switch (algorithm) {
                         case 1:
-                            sorter.selInsBubSort(songs, Song::compareByHighestStreamsCountTotal);
+                            sorter.selInsBubSort(new ArrayList<>(songs), Song::compareByHighestStreamsCountTotal);
                             break;
                         case 2:
-                            sorter.quickSort(songs, Song::compareByHighestStreamsCountTotal);
+                            sorter.quickSort(new ArrayList<>(songs), Song::compareByHighestStreamsCountTotal);
                             break;
                         case 3:
-                            sorter.topsHeapSort(5, songs, Song::compareByHighestStreamsCountTotal);
+                            sorter.topsHeapSort(5, new ArrayList<>(songs), Song::compareByHighestStreamsCountTotal);
                             break;
                         case 4:
-                            sorter.selInsBubSort(songs, Song::compareByHighestStreamsCountTotal);
+                            sorter.selInsBubSort(new ArrayList<>(songs), Song::compareByHighestStreamsCountTotal);
                             break;
                     }
 
@@ -56,27 +53,22 @@ public class SpotifyChartsMain {
 
                     totalExecutionTime += executionTime;
 
-                    if (executionTime > 20000) {
+                    if (executionTime > maxTime) {
                         algorithmExceededTime = true;
                         break;
                     }
 
-                    System.out.println("-------------------------------------------------------");
-                    System.out.println("\nAlgorithm " + algorithm + ":");
-                     System.out.println("Run " + i + ": " + executionTime + "ms");
+                    System.out.println("Run " + (i + 1) + ": " + executionTime + "ms");
 
                     if (algorithmExceededTime) {
                         System.out.println("Algorithm " + algorithm + " exceeded 20 seconds");
-                        System.out.println(totalExecutionTime);
+                        System.out.println("Total time: " + totalExecutionTime + "ms");
+                        break;
                     }
-
-                    k = k * 2;
-
-
                 }
             }
-        }
-        return 0;
 
+            initialSize *= 2;
+        }
     }
 }
