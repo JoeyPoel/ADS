@@ -46,21 +46,17 @@ public class BigOEfficiencyTest {
 
                     totalExecutionTime += executionTime;
 
-                    if (executionTime > maxTime) {
-                        algorithmExceededTime = true;
-                        break;
-                    }
-
                     // maak hier een gemiddelde van inplaats van elke run te meten
                     // verzamel de 10 runs en maak gemiddelde
                     // wanneer executionTime > 20 seconden stop de test en laat de gemmidelde zien!!
                     System.out.println("Run " + (i + 1) + ": " + executionTime + "ms");
 
-                    if (algorithmExceededTime) {
+                    if (executionTime > maxTime) {
                         System.out.println("Total time: " + totalExecutionTime + "ms");
+                        break;
                     }
                 }
-
+            System.out.println("Average: " + totalExecutionTime / 10  + "ms");
 
             initialSize *= 2;
         }
