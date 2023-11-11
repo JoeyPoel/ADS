@@ -27,15 +27,17 @@ public class BigOEfficiencyTest {
                 totalExecutionTime = 0;
 
                 System.out.println("-------------------------------------------------------");
-                System.out.println("\nAlgorithm 1: ");
+                System.out.println("\nAlgorithm 1 with initialSize:" + initialSize );
 
                 for (int i = 0; i < 10; i++) {
                     ChartsCalculator chartsCalculator = new ChartsCalculator(i);
 
                     List<Song> songs = chartsCalculator.registerStreamedSongs(initialSize);
 
+                    List<Song> songList = new ArrayList<>(songs);
+
                     startTime = System.currentTimeMillis();
-                    sorter.quickSort(new ArrayList<>(songs), Song::compareByHighestStreamsCountTotal);
+                    sorter.topsHeapSort(1, songList, Song::compareByHighestStreamsCountTotal);
 
                     System.gc();
 
