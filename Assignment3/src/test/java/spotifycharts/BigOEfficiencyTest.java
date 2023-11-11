@@ -22,7 +22,10 @@ public class BigOEfficiencyTest {
 
         while (initialSize <= maxSongs) {
 
-                totalExecutionTime = 0;
+            boolean exceededTime = false;
+
+
+            totalExecutionTime = 0;
 
                 System.out.println("-------------------------------------------------------");
                 System.out.println("\nAlgorithm 1 with initialSize:" + initialSize );
@@ -44,19 +47,21 @@ public class BigOEfficiencyTest {
 
                     totalExecutionTime += executionTime;
 
-                    // maak hier een gemiddelde van inplaats van elke run te meten
-                    // verzamel de 10 runs en maak gemiddelde
-                    // wanneer executionTime > 20 seconden stop de test en laat de gemmidelde zien!!
-                    System.out.println("Run " + (i + 1) + ": " + executionTime + "ms");
-
                     if (executionTime > maxTime) {
                         System.out.println("Total time: " + totalExecutionTime + "ms");
+                        exceededTime = true;
                         break;
                     }
                 }
-            System.out.println("Average: " + totalExecutionTime / 10  + "ms");
 
-            initialSize *= 2;
+            if (exceededTime) {
+                System.out.println("Execution Time exceeded 20 seconds!!");
+                break;
+            } else {
+                System.out.println("Average: " + totalExecutionTime / 10 + "ms");
+
+                initialSize *= 2;
+            }
         }
     }
 
@@ -65,10 +70,12 @@ public class BigOEfficiencyTest {
 
         while (initialSize <= maxSongs) {
 
+            boolean exceededTime = false;
+
             totalExecutionTime = 0;
 
             System.out.println("-------------------------------------------------------");
-            System.out.println("\nAlgorithm 2 with initialSize:" + initialSize );
+            System.out.println("\nAlgorithm 2 with initialSize:" + initialSize);
 
             for (int i = 0; i < 10; i++) {
                 ChartsCalculator chartsCalculator = new ChartsCalculator(i);
@@ -87,62 +94,70 @@ public class BigOEfficiencyTest {
 
                 totalExecutionTime += executionTime;
 
-                // maak hier een gemiddelde van inplaats van elke run te meten
-                // verzamel de 10 runs en maak gemiddelde
-                // wanneer executionTime > 20 seconden stop de test en laat de gemmidelde zien!!
-                System.out.println("Run " + (i + 1) + ": " + executionTime + "ms");
-
                 if (executionTime > maxTime) {
                     System.out.println("Total time: " + totalExecutionTime + "ms");
+                    exceededTime = true;
                     break;
                 }
             }
-            System.out.println("Average: " + totalExecutionTime / 10  + "ms");
 
-            initialSize *= 2;
+            if (exceededTime) {
+                System.out.println("Execution Time exceeded 20 seconds!!");
+                break;
+            } else {
+                System.out.println("Average: " + totalExecutionTime / 10 + "ms");
+
+                initialSize *= 2;
+            }
         }
     }
 
     @Test
     void AlgorithmTopHeapsSort() {
 
-        while (initialSize <= maxSongs) {
+            while (initialSize <= maxSongs) {
 
-            totalExecutionTime = 0;
+                boolean exceededTime = false;
 
-            System.out.println("-------------------------------------------------------");
-            System.out.println("\nAlgorithm 3 with initialSize:" + initialSize );
+                totalExecutionTime = 0;
 
-            for (int i = 0; i < 10; i++) {
-                ChartsCalculator chartsCalculator = new ChartsCalculator(i);
+                System.out.println("-------------------------------------------------------");
+                System.out.println("\nAlgorithm 3 with initialSize:" + initialSize);
 
-                List<Song> songs = chartsCalculator.registerStreamedSongs(initialSize);
+                for (int i = 0; i < 10; i++) {
+                    ChartsCalculator chartsCalculator = new ChartsCalculator(i);
 
-                List<Song> songList = new ArrayList<>(songs);
+                    List<Song> songs = chartsCalculator.registerStreamedSongs(initialSize);
 
-                startTime = System.currentTimeMillis();
-                sorter.topsHeapSort(1, songList, Song::compareByHighestStreamsCountTotal);
+                    List<Song> songList = new ArrayList<>(songs);
 
-                System.gc();
+                    startTime = System.currentTimeMillis();
+                    sorter.topsHeapSort(1, songList, Song::compareByHighestStreamsCountTotal);
 
-                endTime = System.currentTimeMillis();
-                long executionTime = endTime - startTime;
+                    System.gc();
 
-                totalExecutionTime += executionTime;
+                    endTime = System.currentTimeMillis();
+                    long executionTime = endTime - startTime;
 
-                // maak hier een gemiddelde van inplaats van elke run te meten
-                // verzamel de 10 runs en maak gemiddelde
-                // wanneer executionTime > 20 seconden stop de test en laat de gemmidelde zien!!
-                System.out.println("Run " + (i + 1) + ": " + executionTime + "ms");
+                    totalExecutionTime += executionTime;
 
-                if (executionTime > maxTime) {
-                    System.out.println("Total time: " + totalExecutionTime + "ms");
-                    break;
+
+                    if (executionTime > maxTime) {
+                        System.out.println("Total time: " + totalExecutionTime + "ms");
+                        exceededTime = true;
+                        break;
+                    }
                 }
-            }
-            System.out.println("Average: " + totalExecutionTime / 10  + "ms");
 
-            initialSize *= 2;
+                if (exceededTime) {
+                    System.out.println("Execution Time exceeded 20 seconds!!");
+                    break;
+                } else {
+                    System.out.println("Average: " + totalExecutionTime / 10 + "ms");
+
+                    initialSize *= 2;
+                }
+
+            }
         }
-    }
 }
