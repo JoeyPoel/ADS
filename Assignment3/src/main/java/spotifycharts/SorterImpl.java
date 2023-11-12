@@ -30,10 +30,7 @@ public class SorterImpl<E> implements Sorter<E> {
             if (minIndex != i) {
                 swap(items, i, minIndex);
             }
-        }
-
-
-        return items;
+        }        return items;
     }
 
     /**
@@ -76,7 +73,6 @@ public class SorterImpl<E> implements Sorter<E> {
 
         swap(items, i + 1, high);
         return i + 1;
-
     }
 
     private void swap(List<E> items, int i, int j) {
@@ -174,9 +170,6 @@ public class SorterImpl<E> implements Sorter<E> {
                 break;
             }
         }
-
-
-
     }
     /**
      * Repairs the zero-based heap condition for its root items[0] on the basis of the comparator
