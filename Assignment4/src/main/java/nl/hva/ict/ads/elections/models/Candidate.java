@@ -96,13 +96,9 @@ public class Candidate {
         // TODO provide a hashCode that is consistent with above equality criterion
         // DONE
 
-        int hash = 7;
-        hash = 31 * hash + (getFullName() == null ? 0 : getFullName().hashCode());
-        hash = 31 * hash + (getParty() == null ? 0 : getParty().hashCode());
 
 
-
-        return hash;
+        return Objects.hash(getFullName(), getParty());
     }
 
     public String getFirstName() {
