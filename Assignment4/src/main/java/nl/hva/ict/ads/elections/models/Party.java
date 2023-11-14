@@ -137,4 +137,8 @@ public class Party {
         }
         return new Party(-1, INVALID_NAME);
     }
+
+    public void setCandidates(Set<Candidate> candidates) {
+        this.candidates = candidates;
+    }
 }

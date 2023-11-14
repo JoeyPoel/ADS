@@ -66,10 +66,17 @@ public class Candidate {
 
     @Override
     public String toString() {
-        return "Candidate{" +
-                "partyId=" + party.getId() +
-                ",name='" + getFullName() + "'" +
-                "}";
+        if(party != null){
+            return "Candidate{" +
+                    "partyId=" + party.getId() +
+                    ",name='" + getFullName() + "'" +
+                    "}";
+        } else{
+           return  "Candidate{" +
+                    "partyId=" + null  +
+                    ",name='" + getFullName() + "'" +
+                    "}";
+        }
     }
 
     @Override
@@ -176,5 +183,9 @@ public class Candidate {
         if (!registrationResult) {
             System.out.printf("Registration of %s in %s at rank=%d has failed\n", candidate, constituency, rank);
         }
+    }
+
+    public String getLastNamePrefix() {
+        return lastNamePrefix;
     }
 }
