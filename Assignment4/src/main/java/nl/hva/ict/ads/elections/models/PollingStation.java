@@ -29,10 +29,8 @@ public class PollingStation {
         this.id = id;
         this.zipCode = zipCode;
         this.name = name;
-
         // TODO initialise this.votesByCandidate with an appropriate Map implementation
-
-
+        this.votesByCandidate = new HashMap<>();
 
     }
 
@@ -44,8 +42,7 @@ public class PollingStation {
     public void addVotes(Candidate candidate, int numberOfVotes) {
         // TODO add the number of votes for the candidate
         //   hint: the best quality solution used one line of code...
-
-
+        this.votesByCandidate.merge(candidate, numberOfVotes, Integer::sum);
 
     }
 
@@ -59,9 +56,19 @@ public class PollingStation {
      */
     public Map<Party, Integer> getVotesByParty() {
         // TODO accumulate the votes per candidate into a map of total vote counts by party
+        Map<Party, Integer> votesByParty = new HashMap<>();
 
+        // Accumulate votes per candidate into votesByParty
+        for (Map.Entry<Candidate, Integer> entry : votesByCandidate.entrySet()) {
+            Candidate candidate = entry.getKey();
+            int votes = entry.getValue();
+            Party party = candidate.getParty();
 
-        return null; // replace by a proper outcome
+            // Add the votes to the corresponding party's total votes
+            votesByParty.put(party, votesByParty.getOrDefault(party, 0) + votes);
+        }
+
+        return votesByParty;
     }
 
     /**
