@@ -54,8 +54,9 @@ public class Party {
             }
         }
         // If not found, add the newCandidate to the set and return it
+        newCandidate.setParty(this);         // Associate the new Candidate with this party
         candidates.add(newCandidate);
-        newCandidate.setParty(this); // Associate the new Candidate with this party
+
         return newCandidate;
     }
 
@@ -74,7 +75,11 @@ public class Party {
         Party other = (Party) o;
 
         // TODO provide the equality criterion to identify unique party instances
-        return this.id == other.id && Objects.equals(this.name, other.name);
+        if( this.id == other.id && Objects.equals(this.name, other.name)) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
