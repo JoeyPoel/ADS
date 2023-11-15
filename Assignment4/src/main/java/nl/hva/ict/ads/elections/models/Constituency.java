@@ -2,6 +2,7 @@ package nl.hva.ict.ads.elections.models;
 
 import nl.hva.ict.ads.utils.xml.XMLParser;
 
+import javax.naming.NameAlreadyBoundException;
 import javax.xml.stream.XMLStreamException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -39,9 +40,11 @@ public class Constituency {
         this.name = name;
 
         // TODO initialise this.rankedCandidatesByParty with an appropriate Map implementation
-        //  and this.pollingStations with an appropriate Set implementation organised by zipCode and Id
+        this.rankedCandidatesByParty = new HashMap<>();
 
-
+        // TODO and this.pollingStations with an appropriate Set implementation organised by zipCode and Id
+        this.pollingStations = new TreeSet<>(Comparator.comparing(PollingStation::getZipCode)
+                .thenComparing(PollingStation::getId));
     }
 
     /**
@@ -56,9 +59,26 @@ public class Constituency {
     public boolean register(int rank, Candidate candidate) {
         // TODO  register the candidate in this constituency for his/her party at the given rank (ballot position)
         //  hint1: first check if a map of registered candidates already exist for the party of the given candidate
-        //        then add the candidate to that map, if the candidate has not been registered before.
+        //        then add the candidate to that map, if the candidate has not been registered
+        Party candidateParty = candidate.getParty();
 
-        return false;    // replace by a proper outcome
+        // Check if the party exists in the map of registered candidates
+        if (!rankedCandidatesByParty.containsKey(candidateParty)) {
+            // If the party doesn't exist, create a new entry for the party with an empty map
+            rankedCandidatesByParty.put(candidateParty, new TreeMap<>());
+        }
+
+        // Get the map of candidates for the party
+        NavigableMap<Integer, Candidate> candidatesByRank = rankedCandidatesByParty.get(candidateParty);
+
+        // Check if the rank is already occupied by another candidate for the same party
+        if (candidatesByRank.containsKey(rank)) {
+            return false;
+        } else {
+            // Register the candidate at the given rank for the party
+            candidatesByRank.put(rank, candidate);
+            return true;
+        }
     }
 
     /**
@@ -69,9 +89,7 @@ public class Constituency {
         // TODO: return all parties that have been registered at this constituency
         //  hint: there is no need to build a new collection; just return what you have got...
 
-
-
-        return null;    // replace by a proper outcome
+        return this.getRankedCandidatesByParty().keySet();
     }
 
     /**
@@ -84,7 +102,14 @@ public class Constituency {
         // TODO: return the candidate at the given rank in the given party
 
 
-        return null;    // replace by a proper outcome
+        if(rankedCandidatesByParty.containsKey(party)){
+            NavigableMap<Integer, Candidate> candidatesByRank = rankedCandidatesByParty.get(party);
+
+            if(candidatesByRank.containsKey(rank)){
+                return candidatesByRank.get(rank);
+            }
+        }
+        return null;    // No candidate found
     }
 
     /**
@@ -97,8 +122,7 @@ public class Constituency {
         //  hint: if the implementation classes of rankedCandidatesByParty are well chosen, this only takes one line of code
         //  hint: the resulting list may be immutable at your choice of implementation.
 
-
-        return null; // replace by a proper outcome
+        return null;
     }
 
     /**
