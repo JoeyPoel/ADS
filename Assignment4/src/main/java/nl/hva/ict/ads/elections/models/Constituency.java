@@ -122,7 +122,7 @@ public class Constituency {
         //  hint: if the implementation classes of rankedCandidatesByParty are well chosen, this only takes one line of code
         //  hint: the resulting list may be immutable at your choice of implementation.
 
-        return null;
+        return rankedCandidatesByParty.getOrDefault(party, new TreeMap<>()).values().stream().collect(Collectors.toList());
     }
 
     /**
@@ -133,9 +133,9 @@ public class Constituency {
     public Set<Candidate> getAllCandidates() {
         // TODO collect all candidates of all parties of this Constituency into a Set.
         //  hint: flatMap may help...
-
-
-        return null;    // replace by a proper outcome
+        return rankedCandidatesByParty.values().stream()
+                .flatMap(map -> map.values().stream())
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -149,9 +149,21 @@ public class Constituency {
     public NavigableSet<PollingStation> getPollingStationsByZipCodeRange(String firstZipCode, String lastZipCode) {
         // TODO: return all polling stations that have been registered at this constituency
         //  hint: there is no need to build a new collection; just return what you have got...
+        // Create a subset of polling stations within the specified zipCode range
+        NavigableSet<PollingStation> pollingStationsInRange = new TreeSet<>(Comparator.comparing(PollingStation::getZipCode)
+                .thenComparing(PollingStation::getId));
 
+        // Iterate through all polling stations in this constituency
+        for (PollingStation pollingStation : pollingStations) {
+            String stationZipCode = pollingStation.getZipCode();
 
-        return null; // replace by a proper outcome
+            // Check if the polling station's zip code falls within the specified range
+            if (stationZipCode.compareTo(firstZipCode) >= 0 && stationZipCode.compareTo(lastZipCode) <= 0) {
+                pollingStationsInRange.add(pollingStation); // Add the polling station to the subset
+            }
+        }
+
+        return pollingStationsInRange;
     }
 
     /**
@@ -161,9 +173,24 @@ public class Constituency {
      */
     public Map<Party,Integer> getVotesByParty() {
         // TODO prepare a map of total number of votes per party
+        Map<Party, Integer> votesByParty = new HashMap<>();
 
+        // Iterate through all polling stations in the constituency
+        for (PollingStation pollingStation : pollingStations) {
+            // Get the votes for each party in this polling station
+            Map<Party, Integer> votesInStation = pollingStation.getVotesByParty();
 
-        return null; // replace by a proper outcome
+            // Accumulate the votes for each party across all polling stations
+            for (Map.Entry<Party, Integer> entry : votesInStation.entrySet()) {
+                Party party = entry.getKey();
+                int votes = entry.getValue();
+
+                // Add the votes to the corresponding party's total votes
+                votesByParty.put(party, votesByParty.getOrDefault(party, 0) + votes);
+            }
+        }
+
+        return votesByParty;
     }
 
     /**
