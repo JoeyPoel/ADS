@@ -55,7 +55,13 @@ public class Election {
         // TODO find the party with the given id
 
 
-        return null; // replace by a proper outcome
+        return this.constituencies.stream()
+                .flatMap(constituency -> constituency.getParties().stream())
+                .filter(party -> party.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+
     }
 
     public Set<? extends Constituency> getConstituencies() {
@@ -83,7 +89,16 @@ public class Election {
      */
     public Map<Constituency,Integer> numberOfRegistrationsByConstituency(Party party) {
         // TODO build a map with the number of candidate registrations per constituency
+        // Initialize a map to store the number of registrations per constituency
+        Map<Constituency, Integer> registrationsByConstituency = new HashMap<>();
 
+        // Filter the constituencies to those that have the given party registered
+        this.constituencies.forEach(constituency -> {
+            long count = (int) constituency.getCandidates(party).stream()
+                    .filter(candidate -> candidate.getParty().equals(party))
+                    .count();
+            registrationsByConstituency.put(constituency, (int) count);
+        });
 
         return registrationsByConstituency;
     }
