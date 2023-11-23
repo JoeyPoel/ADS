@@ -28,11 +28,9 @@ public class Election {
 
     public Election(String name) {
         this.name = name;
-
         // TODO initialise this.parties and this.constituencies with an appropriate Map implementations
-
-
-
+        this.parties = new HashMap<>();
+        this.constituencies =new HashSet<>();
     }
 
     /**
@@ -42,9 +40,10 @@ public class Election {
     public Collection<Party> getParties() {
         // TODO: return all parties that have been registered for the election
         //  hint: there is no need to build a new collection; just return what you have got...
-
-
-        return null; // replace by a proper outcome
+        return this.constituencies.stream()
+                .flatMap(constituency -> constituency.getParties().stream())
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     /**
@@ -70,9 +69,11 @@ public class Election {
      */
     public List<Candidate> getAllCandidates() {
         // TODO find all candidates organised by increasing party-id
-
-
-        return null; // replace by a proper outcome
+        return this.getParties().stream()
+                .sorted(Comparator.comparingInt(Party::getId))
+                .flatMap(party -> party.getCandidates().stream())
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     /**
@@ -84,7 +85,7 @@ public class Election {
         // TODO build a map with the number of candidate registrations per constituency
 
 
-        return null; // replace by a proper outcome
+        return registrationsByConstituency;
     }
 
     /**
@@ -97,8 +98,28 @@ public class Election {
         //   Hint: There are multiple approaches possible,
         //   if you cannot think of one, read the hints at the bottom of this file.
 
+        Map<String, Set<Candidate>> candidateMap = new HashMap<>();
+        Set<Candidate> candidatesWithDuplicateNames = new HashSet<>();
 
-        return null; // replace by a proper outcome
+        // Iterate through all parties and their candidates
+        for (Party party : this.getParties()) {
+            for (Candidate candidate : party.getCandidates()) {
+                // Retrieve the set of candidates with the same name
+                Set<Candidate> candidatesWithName = candidateMap.computeIfAbsent(
+                        candidate.getFullName(), k -> new HashSet<>()
+                );
+
+                // Check if there's already a candidate with the same name
+                if (!candidatesWithName.isEmpty()) { // if not empty
+                    candidatesWithDuplicateNames.addAll(candidatesWithName);
+                    candidatesWithDuplicateNames.add(candidate);
+                } else {
+                    candidatesWithName.add(candidate);
+                }
+            }
+        }
+
+        return candidatesWithDuplicateNames;
     }
 
     /**
