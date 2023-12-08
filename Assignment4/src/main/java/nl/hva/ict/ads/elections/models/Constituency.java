@@ -72,7 +72,7 @@ public class Constituency {
         NavigableMap<Integer, Candidate> candidatesByRank = rankedCandidatesByParty.get(candidateParty);
 
         // Check if the rank is already occupied by another candidate for the same party or the value is already containing the candidate
-        if (candidatesByRank.containsKey(rank) || candidatesByRank.containsValue(candidate)) {
+        if (candidatesByRank.containsKey(rank) || candidatesByRank.containsValue(candidate) || rank <= 0) {
             return false;
         } else {
             // Register the candidate at the given rank for the party
