@@ -28,6 +28,7 @@ public class ElectionsMain {
 
         // FIXME? In case all tests fail due to a null value for election, you might try to change this resourceName.
         final Election election = Election.importFromDataFolder(PathUtils.getResourcePath("/EML_bestanden_TK2021_HvA_UvA"));
+//        final Election election = Election.importFromDataFolder(PathUtils.getResourcePath("/EML_bestanden_TK2021"));
         // final Election election = Election.importFromDataFolder(PathUtils.getResourcePath("/EML_bestanden_TK2021_NH"));
         // final Election election = Election.importFromDataFolder(PathUtils.getResourcePath("/EML_bestanden_TK2021"));
 
