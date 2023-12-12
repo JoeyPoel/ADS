@@ -142,13 +142,40 @@ public abstract class AbstractGraph<V> {
      */
     public GPath depthFirstSearch(V startVertex, V targetVertex) {
 
+        GPath path = new GPath();
+
         if (startVertex == null || targetVertex == null) return null;
 
         // TODO calculate the path from start to target by recursive depth-first-search
 
 
 
-        return null;    // replace by a proper outcome, if any
+        return depthFirstSearch(startVertex, targetVertex, new HashSet<>(), path) ;   // replace by a proper outcome, if any
+    }
+
+    private GPath depthFirstSearch (V current, V target, Set<V> visited, GPath path) {
+
+
+        if (visited.contains(current)) return null;
+        visited.add(current);
+        path.visited.add(current);
+
+        if (current.equals(target)) {
+            path.vertices.addLast(current);
+            return path;
+        }
+
+        for (V neighbour: this.getNeighbours(current)) {
+
+             GPath subPath = depthFirstSearch(neighbour, target, visited, path);
+
+            if (subPath != null) {
+                subPath.vertices.addFirst(current);
+                return subPath;
+            }
+        }
+
+        return null;
     }
 
 
