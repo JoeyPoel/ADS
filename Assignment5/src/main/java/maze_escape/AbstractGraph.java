@@ -33,9 +33,21 @@ public abstract class AbstractGraph<V> {
     public Set<V> getAllVertices(V firstVertex) {
         // TODO calculate recursively the set of all connected vertices that can be reached from the given start vertex
         //  hint: reuse getNeighbours()
+        Set<V> allVertices = new HashSet<>();
+        // Recursive method call to explore vertices
+        exploreVertices(firstVertex, allVertices);
+        return allVertices;
+    }
 
-
-        return null;    // replace by a proper outcome
+    // Helper method to explore vertices recursively
+    private void exploreVertices(V vertex, Set<V> visited) {
+        if (!visited.contains(vertex)) {
+            visited.add(vertex);
+            Set<V> neighbours = this.getNeighbours(vertex);
+            for (V neighbour : neighbours) {
+                exploreVertices(neighbour, visited);
+            }
+        }
     }
 
 
@@ -58,13 +70,27 @@ public abstract class AbstractGraph<V> {
         //  following a recursive pre-order traversal of a spanning tree
         //  using the above stringBuilder to format the list
         //  hint: use the getNeighbours() method to retrieve the roots of the child subtrees.
+        // Recursively build the adjacency list
+        Set<V> visited = new HashSet<>();
+        formatHelper(firstVertex, visited, stringBuilder);
 
-
-
-        // return the result
+        // Return the result
         return stringBuilder.toString();
     }
 
+    private void formatHelper(V vertex, Set<V> visited, StringBuilder stringBuilder) {
+        if (!visited.contains(vertex)) {
+            visited.add(vertex);
+            Set<V> neighbours = this.getNeighbours(vertex);
+
+            // Append the vertex and its neighbors to the adjacency list
+            stringBuilder.append(vertex).append(": ").append(neighbours).append("\n");
+
+            for (V neighbour : neighbours) {
+                formatHelper(neighbour, visited, stringBuilder);
+            }
+        }
+    }
 
     /**
      * represents a directed path of connected vertices in the graph

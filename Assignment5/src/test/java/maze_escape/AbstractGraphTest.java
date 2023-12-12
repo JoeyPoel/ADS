@@ -58,12 +58,12 @@ class AbstractGraphTest {
     @Test
     void adjacencyListsShouldFormatPerOrder() {
         assertEquals("Graph adjacency list:\n" +
-                "NL: [DE,BE,UK]\n" +
-                "DE: [BE,FR,NL,LUX]\n" +
-                "BE: [DE,UK,FR,NL,LUX]\n" +
-                "UK: [BE,FR,NL]\n" +
-                "FR: [DE,BE,UK,LUX]\n" +
-                "LUX: [DE,BE,FR]\n", europe.formatAdjacencyList(nl));
+                "NL: [DE, BE, UK]\n" +
+                "DE: [BE, FR, NL, LUX]\n" +
+                "BE: [DE, UK, FR, NL, LUX]\n" +
+                "UK: [BE, FR, NL]\n" +
+                "FR: [DE, BE, UK, LUX]\n" +
+                "LUX: [DE, BE, FR]\n", europe.formatAdjacencyList(nl));
         assertEquals("Graph adjacency list:\n" +
                 "RO: [HU]\n" +
                 "HU: [RO]\n", europe.formatAdjacencyList(ro));
