@@ -214,16 +214,48 @@ public abstract class AbstractGraph<V> {
      *          or null if target cannot be matched with a vertex in the sub-graph from startVertex
      */
     public GPath breadthFirstSearch(V startVertex, V targetVertex) {
-
         if (startVertex == null || targetVertex == null) return null;
 
-        // TODO calculate the path from start to target by breadth-first-search
+        Set<V> visited = new HashSet<>();
+        Map<V, V> parentMap = new HashMap<>();
+        Queue<V> queue = new LinkedList<>();
 
+        queue.offer(startVertex);
+        visited.add(startVertex);
 
+        return breadthFirstSearchRecursive(targetVertex, visited, parentMap, queue);
+    }
 
+    private GPath breadthFirstSearchRecursive(V targetVertex, Set<V> visited, Map<V, V> parentMap, Queue<V> queue) {
+        if (queue.isEmpty()) {
+            return null; // Target not found
+        }
 
+        V currentVertex = queue.poll();
 
-        return null;    // replace by a proper outcome, if any
+        if (currentVertex.equals(targetVertex)) {
+            List<V> path = new ArrayList<>();
+            V vertex = targetVertex;
+
+            // Reconstruct the path from target to start using parentMap
+            while (vertex != null) {
+                path.add(vertex);
+                vertex = parentMap.get(vertex);
+            }
+
+            Collections.reverse(path);
+            return null; // TODO REPLACE WITH OUTCOME
+        }
+
+        for (V neighbor : getNeighbours(currentVertex)) {
+            if (!visited.contains(neighbor)) {
+                queue.offer(neighbor);
+                visited.add(neighbor);
+                parentMap.put(neighbor, currentVertex);
+            }
+        }
+
+        return breadthFirstSearchRecursive(targetVertex, visited, parentMap, queue);
     }
 
     // helper class to build the spanning tree of visited vertices in dijkstra's shortest path algorithm
