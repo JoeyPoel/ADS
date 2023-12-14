@@ -224,37 +224,25 @@ public abstract class AbstractGraph<V> {
         queue.offer(startVertex);
         visited.add(startVertex);
 
-        if (startVertex.equals(targetVertex)) {
-            path.getVertices().add(startVertex);
-            path.getVisited().addAll(visited);
-            return path;
-        }
-
-        return breadthFirstSearchRecursive(targetVertex, visited, parentMap, queue, path);
-    }
-
-    private GPath breadthFirstSearchRecursive(V targetVertex, Set<V> visited, Map<V, V> parentMap, Queue<V> queue, GPath gPath) {
         while (!queue.isEmpty()) {
             V currentVertex = queue.poll();
+
+            if (currentVertex.equals(targetVertex)) {
+                // Reconstruct the path from target to start using parentMap
+                while (currentVertex != null) {
+                    path.getVertices().add(currentVertex);
+                    currentVertex = parentMap.get(currentVertex);
+                }
+                Collections.reverse((List<?>) path.getVertices()); // Reverse to get start to target path
+                path.getVisited().addAll(visited);
+                return path;
+            }
 
             for (V neighbor : getNeighbours(currentVertex)) {
                 if (!visited.contains(neighbor)) {
                     queue.offer(neighbor);
                     visited.add(neighbor);
                     parentMap.put(neighbor, currentVertex);
-
-                    if (neighbor.equals(targetVertex)) {
-                        V vertex = targetVertex;
-
-                        // Reconstruct the path from target to start using parentMap
-                        while (vertex != null) {
-                            gPath.getVertices().add(vertex);
-                            vertex = parentMap.get(vertex);
-                        }
-                        Collections.reverse((List<?>) gPath.getVertices()); // Reverse to get start to target path
-                        gPath.getVisited().addAll(visited);
-                        return gPath;
-                    }
                 }
             }
         }
