@@ -219,44 +219,49 @@ public abstract class AbstractGraph<V> {
         Set<V> visited = new HashSet<>();
         Map<V, V> parentMap = new HashMap<>();
         Queue<V> queue = new LinkedList<>();
+        GPath path = new GPath();
 
         queue.offer(startVertex);
         visited.add(startVertex);
 
-        return breadthFirstSearchRecursive(targetVertex, visited, parentMap, queue);
+        if (startVertex.equals(targetVertex)) {
+            path.getVertices().add(startVertex);
+            path.getVisited().addAll(visited);
+            return path;
+        }
+
+        return breadthFirstSearchRecursive(targetVertex, visited, parentMap, queue, path);
     }
 
-    private GPath breadthFirstSearchRecursive(V targetVertex, Set<V> visited, Map<V, V> parentMap, Queue<V> queue) {
-        if (queue.isEmpty()) {
-            return null; // Target not found
-        }
+    private GPath breadthFirstSearchRecursive(V targetVertex, Set<V> visited, Map<V, V> parentMap, Queue<V> queue, GPath gPath) {
+        while (!queue.isEmpty()) {
+            V currentVertex = queue.poll();
 
-        V currentVertex = queue.poll();
+            for (V neighbor : getNeighbours(currentVertex)) {
+                if (!visited.contains(neighbor)) {
+                    queue.offer(neighbor);
+                    visited.add(neighbor);
+                    parentMap.put(neighbor, currentVertex);
 
-        if (currentVertex.equals(targetVertex)) {
-            List<V> path = new ArrayList<>();
-            V vertex = targetVertex;
+                    if (neighbor.equals(targetVertex)) {
+                        V vertex = targetVertex;
 
-            // Reconstruct the path from target to start using parentMap
-            while (vertex != null) {
-                path.add(vertex);
-                vertex = parentMap.get(vertex);
-            }
-
-            Collections.reverse(path);
-            return null; // TODO REPLACE WITH OUTCOME
-        }
-
-        for (V neighbor : getNeighbours(currentVertex)) {
-            if (!visited.contains(neighbor)) {
-                queue.offer(neighbor);
-                visited.add(neighbor);
-                parentMap.put(neighbor, currentVertex);
+                        // Reconstruct the path from target to start using parentMap
+                        while (vertex != null) {
+                            gPath.getVertices().add(vertex);
+                            vertex = parentMap.get(vertex);
+                        }
+                        Collections.reverse((List<?>) gPath.getVertices()); // Reverse to get start to target path
+                        gPath.getVisited().addAll(visited);
+                        return gPath;
+                    }
+                }
             }
         }
 
-        return breadthFirstSearchRecursive(targetVertex, visited, parentMap, queue);
+        return null; // Target not found
     }
+
 
     // helper class to build the spanning tree of visited vertices in dijkstra's shortest path algorithm
     // your may change this class or delete it altogether follow a different approach in your implementation
