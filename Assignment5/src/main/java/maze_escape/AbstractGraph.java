@@ -251,24 +251,33 @@ public abstract class AbstractGraph<V> {
     }
 
 
-    // helper class to build the spanning tree of visited vertices in dijkstra's shortest path algorithm
-    // your may change this class or delete it altogether follow a different approach in your implementation
+    // helper class to build the spanning tree of visited vertices in Dijkstra's shortest path algorithm
+    // you may change this class or delete it altogether to follow a different approach in your implementation
     private class MSTNode implements Comparable<MSTNode> {
         protected V vertex;                // the graph vertex that is concerned with this MSTNode
-        protected V parentVertex = null;     // the parent's node vertex that has an edge towards this node's vertex
+        protected V parentVertex = null;   // the parent's node vertex that has an edge towards this node's vertex
         protected boolean marked = false;  // indicates DSP processing has been marked complete for this vertex
         protected double weightSumTo = Double.MAX_VALUE;   // sum of weights of current shortest path towards this node's vertex
 
+        // Constructor with parameters for parentVertex, vertex, and weightSumTo
+        private MSTNode(V parentVertex, V vertex, double weightSumTo) {
+            this.parentVertex = parentVertex;
+            this.vertex = vertex;
+            this.weightSumTo = weightSumTo;
+        }
+
+        // Constructor without parameters
         private MSTNode(V vertex) {
             this.vertex = vertex;
         }
 
-        // comparable interface helps to find a node with the shortest current path, sofar
+        // Comparable interface helps to find a node with the shortest current path so far
         @Override
         public int compareTo(MSTNode otherMSTNode) {
             return Double.compare(weightSumTo, otherMSTNode.weightSumTo);
         }
     }
+
 
     /**
      * Calculates the edge-weighted shortest path from the startVertex to targetVertex in the subgraph
@@ -281,53 +290,74 @@ public abstract class AbstractGraph<V> {
      *          or null if target cannot be matched with a vertex in the sub-graph from startVertex
      */
     public GPath dijkstraShortestPath(V startVertex, V targetVertex,
-                                      BiFunction<V,V,Double> weightMapper) {
+                                      BiFunction<V, V, Double> weightMapper) {
 
         if (startVertex == null || targetVertex == null) return null;
 
-        // initialise the result path of the search
+        // Initialise the result path of the search
         GPath path = new GPath();
         path.visited.add(startVertex);
 
-        // easy target
+        // Easy target
         if (startVertex.equals(targetVertex)) {
             path.vertices.add(startVertex);
             return path;
         }
 
-        // a minimum spanning tree which tracks for every visited vertex:
+        // A minimum spanning tree which tracks for every visited vertex:
         //   a) its (parent) predecessor in the currently shortest path towards this visited vertex
         //   b) the total weight of the currently shortest path towards this visited vertex
         //   c) a mark, indicating whether the current path towards this visited vertex is the final shortest.
-        // (you may choose a different approach of tracking the MST of the algorithm, if you wish)
         Map<V, MSTNode> minimumSpanningTree = new HashMap<>();
 
-        // initialise the minimum spanning tree with the startVertex
+        // Initialise the minimum spanning tree with the startVertex
         MSTNode nearestMSTNode = new MSTNode(startVertex);
         nearestMSTNode.weightSumTo = 0.0;
         minimumSpanningTree.put(startVertex, nearestMSTNode);
 
-        // TODO maybe more helper variables or data structures, if needed
-
-
-
         while (nearestMSTNode != null) {
 
-            // TODO continue Dijkstra's algorithm to process nearestMSTNode
-            //  mark nodes as you find their current shortest path to be final
-            //  if you hit the target: complete the path and bail out !!!
-            //  register all visited vertices for statistical purposes
+            // Continue Dijkstra's algorithm to process nearestMSTNode
+            // Mark nodes as you find their current shortest path to be final
+            // If you hit the target: complete the path and bail out!!!
+            // Register all visited vertices for statistical purposes
 
+            for (V neighbor : this.getNeighbours(nearestMSTNode.vertex)) {
+                double tentativeWeight = nearestMSTNode.weightSumTo + weightMapper.apply(nearestMSTNode.vertex, neighbor);
 
+                // Check if the tentative weight is shorter than the current known distance
+                if (!minimumSpanningTree.containsKey(neighbor) || tentativeWeight < minimumSpanningTree.get(neighbor).weightSumTo) {
+                    // Update the minimum distance and predecessor
+                    minimumSpanningTree.put(neighbor, new MSTNode(nearestMSTNode.vertex, neighbor, tentativeWeight));
+                    path.visited.add(neighbor);
+                }
+            }
 
-
-
-
-            // TODO find the next nearest MSTNode that is not marked yet
-            nearestMSTNode = null;      // replace by a proper selection
+            // Find the next nearest MSTNode that is not marked yet
+            nearestMSTNode = findNextNearestMSTNode(minimumSpanningTree, path.visited);
         }
 
-
-        return null;        // replace by a proper outcome, if any
+        // Replace by a proper outcome, if any
+        return null;
     }
+
+
+    private MSTNode findNextNearestMSTNode(Map<V, MSTNode> minimumSpanningTree, Set<V> visitedVertices) {
+        MSTNode nearestMSTNode = null;
+
+        for (MSTNode node : minimumSpanningTree.values()) {
+            V vertex = node.vertex;
+
+            // Check if the vertex is not marked as visited
+            if (!visitedVertices.contains(vertex)) {
+                // Check if the nearestMSTNode is null or if the weightSumTo is smaller than the current nearestMSTNode
+                if (nearestMSTNode == null || node.weightSumTo < nearestMSTNode.weightSumTo) {
+                    nearestMSTNode = node;
+                }
+            }
+        }
+
+        return nearestMSTNode;
+    }
+
 }
