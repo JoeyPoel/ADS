@@ -155,6 +155,10 @@ public abstract class AbstractGraph<V> {
             return this.totalWeight;
         }
 
+        public void setTotalWeight(double totalWeight) {
+            this.totalWeight = totalWeight;
+        }
+
         public Set<V> getVisited() { return this.visited; }
     }
 
@@ -289,75 +293,69 @@ public abstract class AbstractGraph<V> {
      * @return  the shortest path from startVertex to targetVertex
      *          or null if target cannot be matched with a vertex in the sub-graph from startVertex
      */
-    public GPath dijkstraShortestPath(V startVertex, V targetVertex,
-                                      BiFunction<V, V, Double> weightMapper) {
+    public GPath dijkstraShortestPath(V startVertex, V targetVertex, BiFunction<V, V, Double> weightMapper) {
+        if (startVertex == null || targetVertex == null || weightMapper == null) {
+            return null; // Return null for invalid inputs
+        }
 
-        if (startVertex == null || targetVertex == null) return null;
-
-        // Initialise the result path of the search
+        // Initialize the result path of the search
         GPath path = new GPath();
         path.visited.add(startVertex);
 
         // Easy target
         if (startVertex.equals(targetVertex)) {
             path.vertices.add(startVertex);
+            path.setTotalWeight(0.0);
             return path;
         }
 
-        // A minimum spanning tree which tracks for every visited vertex:
-        //   a) its (parent) predecessor in the currently shortest path towards this visited vertex
-        //   b) the total weight of the currently shortest path towards this visited vertex
-        //   c) a mark, indicating whether the current path towards this visited vertex is the final shortest.
         Map<V, MSTNode> minimumSpanningTree = new HashMap<>();
+        minimumSpanningTree.put(startVertex, new MSTNode(startVertex, null, 0.0));
 
-        // Initialise the minimum spanning tree with the startVertex
-        MSTNode nearestMSTNode = new MSTNode(startVertex);
-        nearestMSTNode.weightSumTo = 0.0;
-        minimumSpanningTree.put(startVertex, nearestMSTNode);
+        PriorityQueue<MSTNode> priorityQueue = new PriorityQueue<>(Comparator.comparingDouble(node -> node.weightSumTo));
+        priorityQueue.offer(minimumSpanningTree.get(startVertex));
 
-        while (nearestMSTNode != null) {
+        while (!priorityQueue.isEmpty()) {
+            MSTNode nearestMSTNode = priorityQueue.poll();
+
+            // Check if nearestMSTNode.vertex is null
+            if (nearestMSTNode.vertex == null) {
+                continue; // Skip this node and proceed to the next one
+            }
 
             // Continue Dijkstra's algorithm to process nearestMSTNode
-            // Mark nodes as you find their current shortest path to be final
-            // If you hit the target: complete the path and bail out!!!
-            // Register all visited vertices for statistical purposes
+            if (nearestMSTNode.vertex.equals(targetVertex)) {
+                constructPath(minimumSpanningTree, path, startVertex, targetVertex);
+                return path;
+            }
 
             for (V neighbor : this.getNeighbours(nearestMSTNode.vertex)) {
                 double tentativeWeight = nearestMSTNode.weightSumTo + weightMapper.apply(nearestMSTNode.vertex, neighbor);
 
-                // Check if the tentative weight is shorter than the current known distance
                 if (!minimumSpanningTree.containsKey(neighbor) || tentativeWeight < minimumSpanningTree.get(neighbor).weightSumTo) {
-                    // Update the minimum distance and predecessor
                     minimumSpanningTree.put(neighbor, new MSTNode(nearestMSTNode.vertex, neighbor, tentativeWeight));
+                    priorityQueue.offer(new MSTNode(neighbor, null, tentativeWeight));
                     path.visited.add(neighbor);
                 }
             }
-
-            // Find the next nearest MSTNode that is not marked yet
-            nearestMSTNode = findNextNearestMSTNode(minimumSpanningTree, path.visited);
         }
-
-        // Replace by a proper outcome, if any
+        // If no target can be found return null
         return null;
     }
 
+    private void constructPath(Map<V, MSTNode> minimumSpanningTree, GPath path, V startVertex, V targetVertex) {
+        List<V> verticesInReverseOrder = new ArrayList<>();
+        V currentVertex = targetVertex;
 
-    private MSTNode findNextNearestMSTNode(Map<V, MSTNode> minimumSpanningTree, Set<V> visitedVertices) {
-        MSTNode nearestMSTNode = null;
-
-        for (MSTNode node : minimumSpanningTree.values()) {
-            V vertex = node.vertex;
-
-            // Check if the vertex is not marked as visited
-            if (!visitedVertices.contains(vertex)) {
-                // Check if the nearestMSTNode is null or if the weightSumTo is smaller than the current nearestMSTNode
-                if (nearestMSTNode == null || node.weightSumTo < nearestMSTNode.weightSumTo) {
-                    nearestMSTNode = node;
-                }
-            }
+        while (!currentVertex.equals(startVertex)) {
+            verticesInReverseOrder.add(currentVertex);
+            currentVertex = minimumSpanningTree.get(currentVertex).parentVertex;
         }
+        verticesInReverseOrder.add(startVertex);
 
-        return nearestMSTNode;
+        Collections.reverse(verticesInReverseOrder);
+
+        path.vertices.addAll(verticesInReverseOrder);
+        path.setTotalWeight(minimumSpanningTree.get(targetVertex).weightSumTo);
     }
-
 }
