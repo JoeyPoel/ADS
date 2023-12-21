@@ -319,21 +319,21 @@ public abstract class AbstractGraph<V> {
             MSTNode nearestMSTNode = priorityQueue.poll();
 
             // Check if nearestMSTNode.vertex is null
-            if (nearestMSTNode.vertex == null) {
+            if (nearestMSTNode.parentVertex == null) {
                 continue; // Skip this node and proceed to the next one
             }
 
             // Continue Dijkstra's algorithm to process nearestMSTNode
-            if (nearestMSTNode.vertex.equals(targetVertex)) {
+            if (nearestMSTNode.parentVertex.equals(targetVertex)) {
                 constructPath(minimumSpanningTree, path, startVertex, targetVertex);
                 return path;
             }
 
-            for (V neighbor : this.getNeighbours(nearestMSTNode.vertex)) {
-                double tentativeWeight = nearestMSTNode.weightSumTo + weightMapper.apply(nearestMSTNode.vertex, neighbor);
+            for (V neighbor : this.getNeighbours(nearestMSTNode.parentVertex)) {
+                double tentativeWeight = nearestMSTNode.weightSumTo + weightMapper.apply(nearestMSTNode.parentVertex, neighbor);
 
                 if (!minimumSpanningTree.containsKey(neighbor) || tentativeWeight < minimumSpanningTree.get(neighbor).weightSumTo) {
-                    minimumSpanningTree.put(neighbor, new MSTNode(nearestMSTNode.vertex, neighbor, tentativeWeight));
+                    minimumSpanningTree.put(neighbor, new MSTNode(nearestMSTNode.parentVertex, neighbor, tentativeWeight));
                     priorityQueue.offer(new MSTNode(neighbor, null, tentativeWeight));
                     path.visited.add(neighbor);
                 }
