@@ -31,8 +31,6 @@ public abstract class AbstractGraph<V> {
      * @return
      */
     public Set<V> getAllVertices(V firstVertex) {
-        // TODO calculate recursively the set of all connected vertices that can be reached from the given start vertex
-        //  hint: reuse getNeighbours()
         Set<V> allVertices = new HashSet<>();
         // Recursive method call to explore vertices
         exploreVertices(firstVertex, allVertices);
@@ -65,11 +63,6 @@ public abstract class AbstractGraph<V> {
      */
     public String formatAdjacencyList(V firstVertex) {
         StringBuilder stringBuilder = new StringBuilder("Graph adjacency list:\n");
-
-        // TODO recursively build the adjacency list including all vertices that can be reached from firstVertex
-        //  following a recursive pre-order traversal of a spanning tree
-        //  using the above stringBuilder to format the list
-        //  hint: use the getNeighbours() method to retrieve the roots of the child subtrees.
         // Recursively build the adjacency list
         Set<V> visited = new HashSet<>();
         formatHelper(firstVertex, visited, stringBuilder);
@@ -171,21 +164,12 @@ public abstract class AbstractGraph<V> {
      *          or null if target cannot be matched with a vertex in the sub-graph from startVertex
      */
     public GPath depthFirstSearch(V startVertex, V targetVertex) {
-
         GPath path = new GPath();
-
         if (startVertex == null || targetVertex == null) return null;
-
-        // TODO calculate the path from start to target by recursive depth-first-search
-
-
-
         return depthFirstSearch(startVertex, targetVertex, new HashSet<>(), path) ;   // replace by a proper outcome, if any
     }
 
     private GPath depthFirstSearch (V current, V target, Set<V> visited, GPath path) {
-
-
         if (visited.contains(current)) return null;
         visited.add(current);
         path.visited.add(current);
@@ -204,7 +188,6 @@ public abstract class AbstractGraph<V> {
                 return subPath;
             }
         }
-
         return null;
     }
 
@@ -297,18 +280,15 @@ public abstract class AbstractGraph<V> {
         if (startVertex == null || targetVertex == null || weightMapper == null) {
             return null; // Return null for invalid inputs
         }
-
         // Initialize the result path of the search
         GPath path = new GPath();
         path.visited.add(startVertex);
-
         // Easy target
         if (startVertex.equals(targetVertex)) {
             path.vertices.add(startVertex);
             path.setTotalWeight(0.0);
             return path;
         }
-
         Map<V, MSTNode> minimumSpanningTree = new HashMap<>();
         minimumSpanningTree.put(startVertex, new MSTNode(startVertex, null, 0.0));
 
@@ -317,18 +297,15 @@ public abstract class AbstractGraph<V> {
 
         while (!priorityQueue.isEmpty()) {
             MSTNode nearestMSTNode = priorityQueue.poll();
-
             // Check if nearestMSTNode.vertex is null
             if (nearestMSTNode.parentVertex == null) {
                 continue; // Skip this node and proceed to the next one
             }
-
             // Continue Dijkstra's algorithm to process nearestMSTNode
             if (nearestMSTNode.parentVertex.equals(targetVertex)) {
                 constructPath(minimumSpanningTree, path, startVertex, targetVertex);
                 return path;
             }
-
             for (V neighbor : this.getNeighbours(nearestMSTNode.parentVertex)) {
                 double tentativeWeight = nearestMSTNode.weightSumTo + weightMapper.apply(nearestMSTNode.parentVertex, neighbor);
 
